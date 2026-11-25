@@ -105,3 +105,10 @@ button, input, select { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* Gestione (staff) */
+.form { display: grid; gap: 12px; padding: 16px; background: var(--superficie); border-radius: var(--r-m); }
+.form-riga { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.azioni { display: flex; flex-wrap: wrap; gap: 8px; }
+.voce-admin { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 16px; min-height: 56px; }
+.voce-admin > :first-child { min-width: 0; }

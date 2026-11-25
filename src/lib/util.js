@@ -19,3 +19,10 @@ export function trovaGiocatore(squadre, giocatoreId) {
   }
   return null
 }
+
+/** Date -> valore per <input type="datetime-local"> (ora del telefono, cioè Italia). */
+export function perInputData(date) {
+  if (!date) return ''
+  const p = (n) => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}T${p(date.getHours())}:${p(date.getMinutes())}`
+}

@@ -18,6 +18,8 @@
   /** @type {{ anno: string, storica: boolean, edizioni: string[] }} */
   let { anno, storica, edizioni } = $props()
 
+  // App.svelte ricrea questo componente con {#key anno}: il valore iniziale basta.
+  // svelte-ignore state_referenced_locally
   const ed = new Edizione(anno)
   setContext('ed', ed)
   onDestroy(() => ed.chiudi())
