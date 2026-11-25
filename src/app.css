@@ -87,8 +87,11 @@ button, input, select { font: inherit; color: inherit; }
 .btn.pericolo { color: var(--rosso); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.campo-form { display: grid; gap: 4px; }
+/* min-width: 0 → i select con opzioni lunghe non sbordano dalla colonna della griglia */
+.campo-form { display: grid; gap: 4px; min-width: 0; }
 .campo-form input, .campo-form select, .campo-form textarea {
+  width: 100%;
+  min-width: 0;
   min-height: 44px;
   padding: 8px 10px;
   border: 1px solid var(--linea);
