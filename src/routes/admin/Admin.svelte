@@ -3,6 +3,7 @@
   import Calendario from './Calendario.svelte'
   import TabelloneAdmin from './TabelloneAdmin.svelte'
   import ChioscoAdmin from './ChioscoAdmin.svelte'
+  import SerateAdmin from './SerateAdmin.svelte'
   import SqualificheAdmin from './SqualificheAdmin.svelte'
   import Impostazioni from './Impostazioni.svelte'
 
@@ -11,6 +12,7 @@
     { id: 'calendario', testo: 'Calendario', c: Calendario },
     { id: 'tabellone', testo: 'Tabellone', c: TabelloneAdmin },
     { id: 'chiosco', testo: 'Chiosco', c: ChioscoAdmin },
+    { id: 'serate', testo: 'Serate', c: SerateAdmin },
     { id: 'squalifiche', testo: 'Squalifiche', c: SqualificheAdmin },
     { id: 'impostazioni', testo: 'Impostazioni', c: Impostazioni },
   ]

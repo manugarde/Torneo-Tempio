@@ -88,7 +88,7 @@ button, input, select { font: inherit; color: inherit; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .campo-form { display: grid; gap: 4px; }
-.campo-form input, .campo-form select {
+.campo-form input, .campo-form select, .campo-form textarea {
   min-height: 44px;
   padding: 8px 10px;
   border: 1px solid var(--linea);

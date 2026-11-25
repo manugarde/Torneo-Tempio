@@ -186,6 +186,15 @@ async function main() {
       giorno: '2026-07-02',
       punti: { grani: 2, curraggia: 6 },
     })
+
+    // Serate
+    await setDoc(doc(db, 'edizioni', '2026', 'serate', 'serata-1'), {
+      data: '2026-07-01', fase: 'Fase a gironi', menu: 'Panini con salsiccia
+Patatine', musica: 'DJ set', note: '',
+    })
+    await setDoc(doc(db, 'edizioni', '2026', 'serate', 'serata-2'), {
+      data: '2026-07-10', fase: 'Finale', menu: 'Porchetta', musica: 'Band dal vivo', note: 'Premiazioni dopo la finale',
+    })
   })
 
   await env.cleanup()

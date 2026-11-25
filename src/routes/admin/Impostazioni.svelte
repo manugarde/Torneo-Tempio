@@ -2,11 +2,14 @@
   import { getContext } from 'svelte'
   import { saveImpostazioni, createEdizione, setEdizioneCorrente } from '../../lib/api.js'
   import { useMeta } from '../../lib/store.svelte.js'
+  import { righe } from '../../lib/format.js'
+  import { resizeLogo } from '../../lib/image.js'
 
   const ed = getContext('ed')
   const meta = useMeta()
 
   let imp = $state(structuredClone($state.snapshot(ed.impostazioni)))
+  let sponsor = $state(imp.sponsor.join('\n'))
   let errore = $state('')
   let messaggio = $state('')
   let nuovoAnno = $state(String(Number(ed.anno) + 1))
@@ -19,6 +22,13 @@
     ;[c[i], c[i + d]] = [c[i + d], c[i]]
   }
 
+  async function caricaLogo(e) {
+    const file = e.currentTarget.files?.[0]
+    if (!file) return
+    errore = ''
+    try { imp.logo = await resizeLogo(file, 480) } catch (err) { errore = err.message }
+  }
+
   async function salva(e) {
     e.preventDefault()
     errore = ''
@@ -26,6 +36,7 @@
     try {
       await saveImpostazioni(ed.anno, {
         ...imp,
+        sponsor: righe(sponsor),
         punti: { vittoria: n(imp.punti.vittoria), pareggio: n(imp.punti.pareggio), sconfitta: n(imp.punti.sconfitta) },
         qualificatiPerGirone: n(imp.qualificatiPerGirone),
         squalifiche: { ...imp.squalifiche, sogliaGialli: n(imp.squalifiche.sogliaGialli), partiteRosso: n(imp.squalifiche.partiteRosso) },
@@ -58,6 +69,23 @@
 <form class="form" onsubmit={salva}>
   <h2>Edizione {ed.anno}</h2>
   <label class="campo-form">Nome del torneo <input required bind:value={imp.nome} /></label>
+
+  <fieldset class="home">
+    <legend>Home</legend>
+    <div class="logo">
+      <img src={imp.logo || `${import.meta.env.BASE_URL}logo.png`} alt="" width="72" height="72" />
+      <label class="campo-form">Logo <input type="file" accept="image/*" onchange={caricaLogo} /></label>
+      {#if imp.logo}<button type="button" class="btn" onclick={() => (imp.logo = '')}>Usa logo predefinito</button>{/if}
+    </div>
+    <label class="campo-form">Periodo <input bind:value={imp.periodo} placeholder="Giugno" />
+      <span class="small muted">Senza anno, es. "Giugno" o "12–28 giugno": l'anno lo aggiunge il sito.</span></label>
+    <label class="campo-form">Luogo <input bind:value={imp.luogo} /></label>
+    <label class="campo-form">Orari <input bind:value={imp.orari} placeholder="Apertura dalle 19.00" /></label>
+    <label class="campo-form">Avviso <textarea rows="2" bind:value={imp.avviso}></textarea>
+      <span class="small muted">Compare in evidenza in home. Lascia vuoto per non mostrare nulla.</span></label>
+    <label class="campo-form">Sponsor <textarea rows="3" bind:value={sponsor}></textarea>
+      <span class="small muted">Un nome per riga.</span></label>
+  </fieldset>
 
   <fieldset class="form-riga">
     <legend>Punti</legend>
@@ -133,5 +161,8 @@
   .check { display: flex; align-items: center; gap: 8px; min-height: 44px; }
   .check input { width: 22px; height: 22px; }
   .edizioni { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .home { display: grid; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .logo img { width: 72px; height: 72px; object-fit: contain; }
   .edizioni li { display: flex; align-items: center; gap: 12px; }
 </style>
