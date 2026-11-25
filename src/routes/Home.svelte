@@ -1,7 +1,7 @@
 <script>
   import { getContext } from 'svelte'
   import { href } from '../lib/router.svelte.js'
-  import { testoPeriodo, formatDataOra, formatGiorno, dataGiorno, chiaveGiorno } from '../lib/format.js'
+  import { testoPeriodo, formatDataOra, formatGiorno, formatOra, dataGiorno, chiaveGiorno } from '../lib/format.js'
   import { ultimaNotizia, prossimaSerata } from '../lib/util.js'
   import SponsorStrip from '../components/SponsorStrip.svelte'
 
@@ -10,6 +10,8 @@
   const logo = $derived(imp.logo || `${import.meta.env.BASE_URL}logo.webp`)
   const notizia = $derived(ultimaNotizia(ed.notizie))
   const evento = $derived(prossimaSerata(ed.serate, chiaveGiorno(new Date())))
+  // Partite in calendario la sera del prossimo evento.
+  const partiteSera = $derived(evento ? ed.partite.filter((p) => p.dataOra && chiaveGiorno(p.dataOra) === evento.data).sort((a, b) => a.dataOra - b.dataOra) : [])
 
   const menu = [
     // mobile: false → su telefono la voce c'è già nella barra in basso
@@ -45,7 +47,12 @@
         <p class="etichetta small">Prossimo evento</p>
         <h2 class="giorno">{formatGiorno(dataGiorno(evento.data))}</h2>
         {#if evento.fase}<p class="fase">{evento.fase}</p>{/if}
-        {#if evento.musica}<p>{evento.musica}</p>{/if}
+        <dl>
+          {#if partiteSera.length}<dt>Partite</dt><dd>{partiteSera.length} {partiteSera.length === 1 ? 'partita' : 'partite'}, la prima alle {formatOra(partiteSera[0].dataOra)}</dd>{/if}
+          {#if evento.menu}<dt>Si mangia</dt><dd>{evento.menu}</dd>{/if}
+          {#if evento.musica}<dt>Evento</dt><dd>{evento.musica}</dd>{/if}
+          {#if evento.note}<dt>Note</dt><dd>{evento.note}</dd>{/if}
+        </dl>
         <a class="small" href={href('/serate')}>Tutti gli eventi</a>
       </article>
     {/if}
@@ -87,6 +94,10 @@
   .testo { white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .giorno::first-letter { text-transform: uppercase; }
   .fase { font-weight: 600; color: var(--campo); }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+  dl:empty { display: none; }
+  dt { color: var(--ardesia-2); font-size: 0.85rem; padding-top: 2px; }
+  dd { margin: 0; white-space: pre-line; }
 
   nav a {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
