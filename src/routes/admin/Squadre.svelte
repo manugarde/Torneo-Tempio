@@ -1,8 +1,9 @@
 <script>
   import { getContext } from 'svelte'
   import TeamBadge from '../../components/TeamBadge.svelte'
-  import { saveSquadra, deleteSquadra, nuovoId } from '../../lib/api.js'
+  import { saveSquadra, deleteSquadra, nuovoId, assegnaGironi } from '../../lib/api.js'
   import { resizeLogo } from '../../lib/image.js'
+  import { sorteggiaGironi } from '../../lib/calc/gironi.js'
 
   const ed = getContext('ed')
   const ordinate = $derived([...ed.squadre].sort((a, b) => (a.girone ?? '').localeCompare(b.girone ?? '') || a.nome.localeCompare(b.nome, 'it')))
@@ -35,6 +36,24 @@
       errore = err.message
     } finally {
       salvataggio = false
+    }
+  }
+
+  let nGironi = $state(4)
+  let esitoSorteggio = $state('')
+  const conPartiteGirone = $derived(ed.partite.some((p) => p.fase === 'girone'))
+
+  async function sorteggia(e) {
+    e.preventDefault()
+    errore = ''
+    esitoSorteggio = ''
+    const n = Number(nGironi)
+    if (!confirm(`Riassegnare a caso il girone di tutte le ${ed.squadre.length} squadre in ${n} gironi?`)) return
+    try {
+      await assegnaGironi(ed.anno, sorteggiaGironi(ed.squadre, n))
+      esitoSorteggio = 'Gironi sorteggiati.'
+    } catch (err) {
+      errore = err.message
     }
   }
 
@@ -80,6 +99,22 @@
   </form>
 {:else}
   <button class="btn primario" onclick={() => modifica(nuova())}>Nuova squadra</button>
+  {#if ordinate.length > 1}
+    <form class="form" onsubmit={sorteggia}>
+      <h2>Sorteggio gironi</h2>
+      <div class="sorteggio">
+        <label class="campo-form">Numero di gironi
+          <input type="number" min="1" max={ordinate.length} required bind:value={nGironi} disabled={conPartiteGirone} />
+        </label>
+        <button class="btn" disabled={conPartiteGirone}>Sorteggia</button>
+      </div>
+      {#if conPartiteGirone}
+        <p class="small muted">Ci sono già partite dei gironi: eliminale da Calendario per rifare il sorteggio.</p>
+      {/if}
+      {#if esitoSorteggio}<p role="status">{esitoSorteggio}</p>{/if}
+      {#if errore}<p class="errore" role="alert">{errore}</p>{/if}
+    </form>
+  {/if}
   {#if !ordinate.length}
     <p class="vuoto">Nessuna squadra. Aggiungi la prima per comporre i gironi.</p>
   {:else}
@@ -96,6 +131,8 @@
 {/if}
 
 <style>
+  .sorteggio { display: flex; align-items: end; gap: 10px; }
+  .sorteggio .campo-form { flex: 1; }
   .logo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   fieldset { display: grid; gap: 8px; border: 1px solid var(--linea); border-radius: var(--r-s); }
   .giocatore { display: grid; grid-template-columns: 64px 1fr 44px; gap: 6px; }

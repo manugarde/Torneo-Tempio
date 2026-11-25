@@ -111,3 +111,24 @@ export async function setEdizioneCorrente(anno) {
   const metaDoc = doc(db, 'meta', 'corrente')
   await setDoc(metaDoc, { edizione: anno })
 }
+
+/** Sorteggio: { [squadraId]: lettera } scritto in un solo batch. */
+export async function assegnaGironi(anno, mappa) {
+  const batch = writeBatch(db)
+  for (const [id, lettera] of Object.entries(mappa)) {
+    batch.update(doc(db, 'edizioni', anno, 'squadre', id), { girone: lettera })
+  }
+  await batch.commit()
+}
+
+/** Elimina e crea le partite di girone in un solo batch (tutto o niente). */
+export async function sostituisciPartiteGirone(anno, daEliminare, nuove) {
+  const batch = writeBatch(db)
+  for (const id of daEliminare) {
+    batch.delete(doc(db, 'edizioni', anno, 'partite', id))
+  }
+  for (const partita of nuove) {
+    batch.set(doc(collection(db, 'edizioni', anno, 'partite')), partita)
+  }
+  await batch.commit()
+}
