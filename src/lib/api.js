@@ -75,6 +75,14 @@ export async function deleteSqualificaManuale(anno, id) {
   await deleteDoc(doc(db, 'edizioni', anno, 'squalificheManuali', id))
 }
 
+export async function saveSerata(anno, serata) {
+  return salva(anno, 'serate', serata)
+}
+
+export async function deleteSerata(anno, id) {
+  await deleteDoc(doc(db, 'edizioni', anno, 'serate', id))
+}
+
 export async function saveImpostazioni(anno, imp) {
   const editionDoc = doc(db, 'edizioni', anno)
   await setDoc(editionDoc, imp, { merge: true })
