@@ -6,7 +6,9 @@
   import { computeSuspensions } from './lib/calc/suspensions.js'
   import Header from './components/Header.svelte'
   import Nav from './components/Nav.svelte'
+  import Home from './routes/Home.svelte'
   import Partite from './routes/Partite.svelte'
+  import Serate from './routes/Serate.svelte'
   import Gironi from './routes/Gironi.svelte'
   import Giocatori from './routes/Giocatori.svelte'
   import Tabellone from './routes/Tabellone.svelte'
@@ -28,13 +30,13 @@
   const sospensioni = $derived(computeSuspensions(ed.squadre, ed.partite, ed.squalificheManuali, ed.impostazioni))
   setContext('calc', { get sospensioni() { return sospensioni } })
 
-  const viste = { '': Partite, gironi: Gironi, giocatori: Giocatori, tabellone: Tabellone, chiosco: Chiosco, squadra: Squadra, partita: Partita }
-  const Corrente = $derived(route.nome === 'admin' && authState.isStaff ? Admin : viste[route.nome] ?? Partite)
+  const viste = { '': Home, partite: Partite, serate: Serate, gironi: Gironi, giocatori: Giocatori, tabellone: Tabellone, chiosco: Chiosco, squadra: Squadra, partita: Partita }
+  const Corrente = $derived(route.nome === 'admin' && authState.isStaff ? Admin : viste[route.nome] ?? Home)
 </script>
 
 <Header {storica} />
 <main class="pagina">
-  <Corrente param={route.param} />
+  <Corrente param={route.param} {storica} />
   {#if edizioni.length > 1}
     <nav class="edizioni small" aria-label="Edizioni">
       <span class="muted">Edizioni:</span>

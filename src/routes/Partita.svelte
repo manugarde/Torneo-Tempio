@@ -5,6 +5,7 @@
   import EventIcon from '../components/EventIcon.svelte'
   import TeamBadge from '../components/TeamBadge.svelte'
   import { authState } from '../lib/auth.svelte.js'
+  import { href } from '../lib/router.svelte.js'
   import { removeEvento } from '../lib/api.js'
   import { perId, trovaGiocatore } from '../lib/util.js'
   import { isSuspended } from '../lib/calc/suspensions.js'
@@ -36,7 +37,7 @@
 {#if !ed.pronta('partite')}
   <p class="muted" role="status">Caricamento…</p>
 {:else if !partita}
-  <p class="vuoto">Partita non trovata. <a href="#/">Torna alle partite</a></p>
+  <p class="vuoto">Partita non trovata. <a href={href('/partite')}>Torna alle partite</a></p>
 {:else}
   <Scoreboard {partita} {squadre} link={false} />
 
