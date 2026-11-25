@@ -9,6 +9,7 @@ describe('conDefault', () => {
     expect(i.orari).toBe('Apertura dalle 19.00')
     expect(i.avviso).toBe('')
     expect(i.sponsor).toEqual(['Powered by Trapatainer'])
+    expect(i.logo).toBe('')
   })
   it('rispetta i valori salvati', () => {
     expect(conDefault({ periodo: '12–28 giugno', sponsor: [] })).toMatchObject({ periodo: '12–28 giugno', sponsor: [] })

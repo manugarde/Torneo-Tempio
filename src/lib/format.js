@@ -30,3 +30,26 @@ export function chiaveGiorno(date) {
   const p = parti(date, { year: 'numeric', month: '2-digit', day: '2-digit' })
   return `${p.year}-${p.month}-${p.day}`
 }
+
+/** Restituisce la combinazione periodo e anno. */
+export function testoPeriodo(periodo, anno) {
+  const trimmed = periodo?.trim()
+  if (!trimmed) return anno
+  return `${trimmed} ${anno}`
+}
+
+/** Divide il testo in righe, ignora righe vuote e li trima. */
+export function righe(testo) {
+  if (!testo) return []
+  return testo.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0)
+}
+
+/** Crea una data alle ore 12 UTC per mantenere il giorno invariato in Europa/Rome. */
+export function dataGiorno(chiave) {
+  return new Date(chiave + 'T12:00:00Z')
+}
+
+/** Determina se avviso è visibile. */
+export function avvisoVisibile(avviso, storica) {
+  return !storica && !!avviso?.trim()
+}
