@@ -11,6 +11,7 @@
 </script>
 
 <header>
+  <span></span>
   <a class="titolo" href={href('/')}>
     <span class="nome">{ed.impostazioni.nome}</span>
     <span class="anno num">{ed.anno}</span>
@@ -37,13 +38,13 @@
 <style>
   header {
     max-width: 640px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;
     padding: calc(12px + env(safe-area-inset-top)) 16px 4px;
   }
   .titolo { display: flex; align-items: baseline; gap: 8px; text-decoration: none; min-width: 0; }
   .nome { font-family: var(--font-titolo); font-weight: 800; font-size: 1.7rem; line-height: 1; }
   .anno { font-family: var(--font-titolo); font-weight: 700; font-size: 1.2rem; color: var(--campo); }
-  .staff { display: flex; align-items: center; gap: 6px; flex: none; }
+  .staff { display: flex; align-items: center; gap: 6px; justify-self: end; }
   .staff .btn { min-height: 40px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center; }
   .chiave { border-color: transparent; background: transparent; color: var(--ardesia-2); }
   .chiave svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }

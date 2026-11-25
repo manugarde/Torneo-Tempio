@@ -46,7 +46,7 @@
     </nav>
   {/if}
 </main>
-<Nav />
+{#if Corrente !== Home}<Nav />{/if}
 
 <style>
   .edizioni { display: flex; flex-wrap: wrap; gap: 4px 12px; padding-top: 12px; border-top: 1px solid var(--linea); }
