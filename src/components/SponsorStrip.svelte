@@ -57,7 +57,8 @@
   .striscia { overflow: hidden; width: 100%; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
   .nastro { display: flex; width: max-content; animation: scorri var(--durata) linear infinite; }
   .nastro ul { padding-right: 28px; }
-  .striscia:hover .nastro, .striscia:focus-within .nastro, .striscia.fermo .nastro { animation-play-state: paused; }
+  /* pausa con il focus solo da tastiera: dopo un clic il logo resta a fuoco e la striscia non ripartirebbe */
+  .striscia:hover .nastro, .striscia:has(:focus-visible) .nastro, .striscia.fermo .nastro { animation-play-state: paused; }
   @keyframes scorri { to { transform: translateX(-50%); } }
 
   @media (prefers-reduced-motion: reduce) {
