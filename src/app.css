@@ -30,21 +30,7 @@
   -webkit-text-size-adjust: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --granito: #151b1d;
-    --superficie: #1f2729;
-    --linea: #34403f;
-    --ardesia: #eceeec;
-    --ardesia-2: #a3aeab;
-    --campo: #4fae74;
-    --campo-chiaro: #1f3a2a;
-    --su-campo: #0f1a14;
-    --tabellone: #0d1214;
-    --su-tabellone: #eceeec;
-    color-scheme: dark;
-  }
-}
+/* Solo tema chiaro (bianco sporco): scelta degli organizzatori, niente tema scuro automatico. */
 
 * { box-sizing: border-box; }
 body { margin: 0; min-height: 100dvh; background: var(--granito); }
