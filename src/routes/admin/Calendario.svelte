@@ -1,14 +1,56 @@
 <script>
   import { getContext } from 'svelte'
   import MatchRow from '../../components/MatchRow.svelte'
-  import { savePartita, deletePartita } from '../../lib/api.js'
+  import { savePartita, deletePartita, sostituisciPartiteGirone } from '../../lib/api.js'
+  import { ordinePartite, programma, generazioneBloccata } from '../../lib/calc/gironi.js'
   import { perId, ordinaPerData, perInputData } from '../../lib/util.js'
-  import { formatDataOra } from '../../lib/format.js'
+  import { formatDataOra, formatGiorno } from '../../lib/format.js'
 
   const ed = getContext('ed')
   const squadre = $derived(perId(ed.squadre))
   const gironi = $derived([...new Set(ed.squadre.map((s) => s.girone))].sort())
   const partite = $derived(ordinaPerData(ed.partite))
+  let scheda = $state('girone')
+  const elenco = $derived(partite.filter((p) => (p.fase === 'eliminazione') === (scheda === 'eliminazione')))
+  const haFinali = $derived(ed.partite.some((p) => p.fase === 'eliminazione'))
+
+  // Genera partite dei gironi
+  const GIORNI = [['Lun', 1], ['Mar', 2], ['Mer', 3], ['Gio', 4], ['Ven', 5], ['Sab', 6], ['Dom', 0]]
+  let gen = $state({ inizio: '', ora: '20:00', minuti: 50, perSerata: 4, giorni: [0, 1, 2, 3, 4, 5, 6] })
+  let esitoGen = $state('')
+  const opzioni = $derived({ ...gen, minuti: Number(gen.minuti), perSerata: Number(gen.perSerata) })
+  const anteprima = $derived.by(() => {
+    if (!gen.inizio) return { testo: 'Scegli la data della prima serata.' }
+    try {
+      const lista = programma(ordinePartite(ed.squadre.filter((s) => s.girone)), opzioni)
+      if (!lista.length) return { testo: 'Servono almeno due squadre per girone.' }
+      const serate = new Set(lista.map((p) => p.dataOra.toDateString())).size
+      return { lista, testo: `${lista.length} partite su ${serate} serate, da ${formatGiorno(lista[0].dataOra)} a ${formatGiorno(lista.at(-1).dataOra)}.` }
+    } catch (err) {
+      return { testo: err.message }
+    }
+  })
+  const giornoAttivo = (g) => gen.giorni.includes(g)
+  const cambiaGiorno = (g) => { gen.giorni = giornoAttivo(g) ? gen.giorni.filter((x) => x !== g) : [...gen.giorni, g] }
+
+  async function genera(e) {
+    e.preventDefault()
+    errore = ''
+    esitoGen = ''
+    if (!anteprima.lista) return
+    if (generazioneBloccata(ed.partite)) { errore = 'Alcune partite dei gironi sono già iniziate o giocate: non si possono rigenerare.'; return }
+    const esistenti = ed.partite.filter((p) => p.fase === 'girone').map((p) => p.id)
+    if (esistenti.length && !confirm(`Sostituire le ${esistenti.length} partite dei gironi già in calendario?`)) return
+    const nuove = anteprima.lista.map(({ girone, casaId, ospiteId, dataOra }) => ({
+      fase: 'girone', girone, casaId, ospiteId, dataOra, campo: '', stato: 'programmata', eventi: [], rigori: null, prossima: null,
+    }))
+    try {
+      await sostituisciPartiteGirone(ed.anno, esistenti, nuove)
+      esitoGen = `${nuove.length} partite create.`
+    } catch (err) {
+      errore = err.message
+    }
+  }
 
   let bozza = $state(null)
   let errore = $state('')
@@ -74,13 +116,43 @@
     </div>
   </form>
 {:else}
-  <button class="btn primario" disabled={!gironi.length} onclick={() => (bozza = nuova())}>Nuova partita</button>
-  {#if !gironi.length}<p class="small muted">Prima inserisci le squadre.</p>{/if}
-  {#if !partite.length}
+  <div class="schede" role="tablist" aria-label="Fase">
+    <button role="tab" aria-selected={scheda === 'girone'} onclick={() => (scheda = 'girone')}>Gironi</button>
+    <button role="tab" aria-selected={scheda === 'eliminazione'} onclick={() => (scheda = 'eliminazione')}>Fase finale</button>
+  </div>
+
+  {#if scheda === 'girone'}
+    <form class="form" onsubmit={genera}>
+      <h2>Genera partite dei gironi</h2>
+      <p class="small muted">Ogni squadra incontra tutte le altre del suo girone. Le date si possono poi cambiare a mano.</p>
+      <div class="form-riga">
+        <label class="campo-form">Prima serata <input type="date" required bind:value={gen.inizio} /></label>
+        <label class="campo-form">Inizio <input type="time" required bind:value={gen.ora} /></label>
+        <label class="campo-form">Minuti tra le partite <input type="number" min="10" required bind:value={gen.minuti} /></label>
+        <label class="campo-form">Partite a serata <input type="number" min="1" required bind:value={gen.perSerata} /></label>
+      </div>
+      <fieldset class="giorni">
+        <legend>Si gioca</legend>
+        {#each GIORNI as [nome, g] (g)}
+          <label class="check"><input type="checkbox" checked={giornoAttivo(g)} onchange={() => cambiaGiorno(g)} /> {nome}</label>
+        {/each}
+      </fieldset>
+      <p class="small" role="status">{anteprima.testo}</p>
+      {#if esitoGen}<p role="status">{esitoGen}</p>{/if}
+      {#if errore}<p class="errore" role="alert">{errore}</p>{/if}
+      <button class="btn primario" disabled={!anteprima.lista}>Genera partite</button>
+    </form>
+    <button class="btn" disabled={!gironi.length} onclick={() => (bozza = nuova())}>Nuova partita a mano</button>
+    {#if !gironi.length}<p class="small muted">Prima inserisci le squadre.</p>{/if}
+  {:else if !haFinali}
+    <p class="small muted">Il tabellone si crea da Gestione → Tabellone.</p>
+  {/if}
+
+  {#if !elenco.length}
     <p class="vuoto">Nessuna partita in calendario.</p>
   {:else}
     <ul class="lista">
-      {#each partite as p (p.id)}
+      {#each elenco as p (p.id)}
         <li class="voce-admin">
           <div class="riga-partita"><MatchRow partita={p} {squadre} mostraData={formatDataOra(p.dataOra)} /></div>
           <button class="btn" onclick={() => modifica(p)}>Modifica</button>
@@ -91,6 +163,15 @@
 {/if}
 
 <style>
+  .schede { display: flex; gap: 6px; }
+  .schede button {
+    flex: none; min-height: 40px; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--linea); background: var(--superficie); font-weight: 600;
+  }
+  .schede button[aria-selected='true'] { background: var(--ardesia); color: var(--granito); border-color: var(--ardesia); }
+  .giorni { display: flex; flex-wrap: wrap; gap: 4px 14px; border: 1px solid var(--linea); border-radius: var(--r-s); }
+  .check { display: flex; align-items: center; gap: 6px; min-height: 44px; }
+  .check input { width: 20px; height: 20px; }
   .riga-partita { flex: 1; pointer-events: none; }
   .riga-partita :global(.riga) { padding: 0; grid-template-columns: 92px 1fr; }
 </style>
