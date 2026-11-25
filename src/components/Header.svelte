@@ -42,7 +42,7 @@
     padding: calc(12px + env(safe-area-inset-top)) 16px 4px;
   }
   .titolo { display: flex; align-items: baseline; gap: 8px; text-decoration: none; min-width: 0; }
-  .nome { font-family: var(--font-titolo); font-weight: 800; font-size: 1.7rem; line-height: 1; }
+  .nome { font-family: var(--font-titolo); font-weight: 800; font-size: clamp(1.25rem, 6vw, 1.7rem); line-height: 1; white-space: nowrap; }
   .anno { font-family: var(--font-titolo); font-weight: 700; font-size: 1.2rem; color: var(--campo); }
   .staff { display: flex; align-items: center; gap: 6px; justify-self: end; }
   .staff .btn { min-height: 40px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center; }

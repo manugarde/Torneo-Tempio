@@ -10,12 +10,13 @@
   const logo = $derived(imp.logo || `${import.meta.env.BASE_URL}logo.webp`)
 
   const menu = [
-    { percorso: '/partite', testo: 'Risultati e calendario' },
-    { percorso: '/gironi', testo: 'Classifica gironi' },
-    { percorso: '/giocatori', testo: 'Classifica marcatori' },
-    { percorso: '/chiosco', testo: 'Coppa Chiosco' },
-    { percorso: '/tabellone', testo: 'Tabellone fase finale' },
-    { percorso: '/serate', testo: 'Eventi giornalieri' },
+    // mobile: false → su telefono la voce c'è già nella barra in basso
+    { percorso: '/partite', testo: 'Risultati e calendario', mobile: false },
+    { percorso: '/gironi', testo: 'Classifica gironi', mobile: false },
+    { percorso: '/giocatori', testo: 'Classifica marcatori', mobile: false },
+    { percorso: '/chiosco', testo: 'Coppa Chiosco', mobile: false },
+    { percorso: '/tabellone', testo: 'Tabellone fase finale', mobile: false },
+    { percorso: '/serate', testo: 'Eventi giornalieri', mobile: true },
   ]
 </script>
 
@@ -33,7 +34,7 @@
 <nav aria-label="Menu del torneo">
   <ul class="lista">
     {#each menu as v (v.percorso)}
-      <li>
+      <li class:solo-desktop={!v.mobile}>
         <a href={href(v.percorso)}>
           <span>{v.testo}</span>
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
@@ -71,6 +72,10 @@
   }
   nav svg { flex: none; fill: none; stroke: var(--campo); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
+  @media (max-width: 719px) {
+    .solo-desktop { display: none; }
+    .lista > li:not(.solo-desktop) { border-top: 0; } /* resta solo Eventi: niente riga sopra */
+  }
   .sponsor { display: grid; gap: 6px; justify-items: center; padding-top: 12px; border-top: 1px solid var(--linea); text-align: center; }
   .sponsor h2 { font-family: var(--font-testo); font-weight: 600; text-transform: uppercase; color: var(--ardesia-2); }
   .sponsor ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; font-weight: 600; }

@@ -46,9 +46,11 @@
     </nav>
   {/if}
 </main>
-{#if Corrente !== Home}<Nav />{/if}
+<!-- In home la barra serve solo su telefono: su PC ci sono i bottoni del menu. -->
+<div class:solo-mobile={Corrente === Home}><Nav /></div>
 
 <style>
+  @media (min-width: 720px) { .solo-mobile { display: none; } }
   .edizioni { display: flex; flex-wrap: wrap; gap: 4px 12px; padding-top: 12px; border-top: 1px solid var(--linea); }
   .edizioni a[aria-current='page'] { font-weight: 700; text-decoration: none; }
 </style>
