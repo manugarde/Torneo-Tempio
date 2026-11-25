@@ -73,7 +73,7 @@
   <fieldset class="home">
     <legend>Home</legend>
     <div class="logo">
-      <img src={imp.logo || `${import.meta.env.BASE_URL}logo.png`} alt="" width="72" height="72" />
+      <img src={imp.logo || `${import.meta.env.BASE_URL}logo.webp`} alt="" width="72" height="72" />
       <label class="campo-form">Logo <input type="file" accept="image/*" onchange={caricaLogo} /></label>
       {#if imp.logo}<button type="button" class="btn" onclick={() => (imp.logo = '')}>Usa logo predefinito</button>{/if}
     </div>

@@ -120,7 +120,7 @@ Serate ordinate per `data` crescente; una scheda per serata: data formattata (ri
 
 ### Casi limite (mie scelte dopo la revisione)
 
-- **Logo (aggiornato con l'utente):** sostituibile da Gestione → Impostazioni. Il campo `logo` delle impostazioni contiene un data URL WebP, prodotto da `resizeLogo(file, 480)` (lato massimo 480px, ≤140000 caratteri). Se il campo è vuoto si usa il file statico `public/logo.png` (allegato della issue #1 ridotto a 400px; niente WebP perché non c'erano strumenti locali). `alt` = `impostazioni.nome`.
+- **Logo (aggiornato con l'utente):** sostituibile da Gestione → Impostazioni. Il campo `logo` delle impostazioni contiene un data URL WebP, prodotto da `resizeLogo(file, 480)` (lato massimo 480px, ≤140000 caratteri). Se il campo è vuoto si usa il file statico `public/logo.webp` (allegato della issue #1, 600px, ~85 KB). `alt` = `impostazioni.nome`.
 - **Edizioni passate (`?ed=`):** la home mostra i dati di quell'edizione, ma **non** l'avviso, che sarebbe vecchio e fuorviante. Il banner "Stai guardando l'edizione…" dell'Header resta com'è. I link edizioni in `Vista.svelte` (`#/?ed=`) portano alla home: va bene così.
 - **Campi vuoti:** con `periodo` vuoto si mostra solo l'anno. Luogo, orari, avviso e sponsor vuoti non si mostrano.
 - **Link `#/`:** il grep ha trovato solo Header (titolo, banner storica), `Impostazioni.svelte` (`location.hash = '#/'` dopo "rendi corrente": resta sulla home) e `Partita.svelte`. Solo quest'ultimo va cambiato in `#/partite`.

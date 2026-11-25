@@ -7,7 +7,7 @@
   let { storica = false } = $props()
   const ed = getContext('ed')
   const imp = $derived(ed.impostazioni)
-  const logo = $derived(imp.logo || `${import.meta.env.BASE_URL}logo.png`)
+  const logo = $derived(imp.logo || `${import.meta.env.BASE_URL}logo.webp`)
 
   const menu = [
     { percorso: '/partite', testo: 'Risultati e calendario' },
