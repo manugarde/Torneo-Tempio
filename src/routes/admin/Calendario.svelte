@@ -30,6 +30,12 @@
       return { testo: err.message }
     }
   })
+  // Ora d'inizio dell'ultima partita di una serata piena.
+  const ultimaOra = $derived.by(() => {
+    const [h, m] = (gen.ora || '00:00').split(':').map(Number)
+    const t = h * 60 + m + (Number(gen.perSerata) - 1) * Number(gen.minuti)
+    return `alle ${String(Math.floor(t / 60) % 24).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`
+  })
   const giornoAttivo = (g) => gen.giorni.includes(g)
   const cambiaGiorno = (g) => { gen.giorni = giornoAttivo(g) ? gen.giorni.filter((x) => x !== g) : [...gen.giorni, g] }
 
@@ -128,9 +134,10 @@
       <div class="form-riga">
         <label class="campo-form">Prima serata <input type="date" required bind:value={gen.inizio} /></label>
         <label class="campo-form">Inizio <input type="time" required bind:value={gen.ora} /></label>
-        <label class="campo-form">Minuti tra le partite <input type="number" min="10" required bind:value={gen.minuti} /></label>
+        <label class="campo-form">Minuti da un inizio al successivo <input type="number" min="10" required bind:value={gen.minuti} /></label>
         <label class="campo-form">Partite a serata <input type="number" min="1" required bind:value={gen.perSerata} /></label>
       </div>
+      <p class="small muted">Durata della partita più la pausa. L'ultima partita della serata inizia {ultimaOra}.</p>
       <fieldset class="giorni">
         <legend>Si gioca</legend>
         {#each GIORNI as [nome, g] (g)}
