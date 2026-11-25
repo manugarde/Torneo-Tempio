@@ -2,14 +2,12 @@
   import { getContext } from 'svelte'
   import { saveImpostazioni, createEdizione, setEdizioneCorrente } from '../../lib/api.js'
   import { useMeta } from '../../lib/store.svelte.js'
-  import { righe } from '../../lib/format.js'
   import { resizeLogo } from '../../lib/image.js'
 
   const ed = getContext('ed')
   const meta = useMeta()
 
   let imp = $state(structuredClone($state.snapshot(ed.impostazioni)))
-  let sponsor = $state(imp.sponsor.join('\n'))
   let errore = $state('')
   let messaggio = $state('')
   let nuovoAnno = $state(String(Number(ed.anno) + 1))
@@ -36,7 +34,6 @@
     try {
       await saveImpostazioni(ed.anno, {
         ...imp,
-        sponsor: righe(sponsor),
         punti: { vittoria: n(imp.punti.vittoria), pareggio: n(imp.punti.pareggio), sconfitta: n(imp.punti.sconfitta) },
         qualificatiPerGirone: n(imp.qualificatiPerGirone),
         squalifiche: { ...imp.squalifiche, sogliaGialli: n(imp.squalifiche.sogliaGialli), partiteRosso: n(imp.squalifiche.partiteRosso) },
@@ -83,8 +80,6 @@
     <label class="campo-form">Orari <input bind:value={imp.orari} placeholder="Apertura dalle 19.00" /></label>
     <label class="campo-form">Avviso <textarea rows="2" bind:value={imp.avviso}></textarea>
       <span class="small muted">Compare in evidenza in home. Lascia vuoto per non mostrare nulla.</span></label>
-    <label class="campo-form">Sponsor <textarea rows="3" bind:value={sponsor}></textarea>
-      <span class="small muted">Un nome per riga.</span></label>
   </fieldset>
 
   <fieldset class="form-riga">

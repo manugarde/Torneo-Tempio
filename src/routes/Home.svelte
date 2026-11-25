@@ -2,6 +2,7 @@
   import { getContext } from 'svelte'
   import { href } from '../lib/router.svelte.js'
   import { testoPeriodo, avvisoVisibile } from '../lib/format.js'
+  import SponsorStrip from '../components/SponsorStrip.svelte'
 
   /** @type {{ storica?: boolean }} */
   let { storica = false } = $props()
@@ -44,12 +45,10 @@
   </ul>
 </nav>
 
-{#if imp.sponsor?.length}
+{#if ed.sponsor.length}
   <footer class="sponsor">
     <h2 class="small">Sponsor</h2>
-    <ul>
-      {#each imp.sponsor as s, i (i)}<li>{s}</li>{/each}
-    </ul>
+    <SponsorStrip sponsor={ed.sponsor} />
   </footer>
 {/if}
 
@@ -76,7 +75,6 @@
     .solo-desktop { display: none; }
     .lista > li:not(.solo-desktop) { border-top: 0; } /* resta solo Eventi: niente riga sopra */
   }
-  .sponsor { display: grid; gap: 6px; justify-items: center; padding-top: 12px; border-top: 1px solid var(--linea); text-align: center; }
+  .sponsor { display: grid; gap: 10px; justify-items: center; min-width: 0; padding-top: 12px; border-top: 1px solid var(--linea); text-align: center; }
   .sponsor h2 { font-family: var(--font-testo); font-weight: 600; text-transform: uppercase; color: var(--ardesia-2); }
-  .sponsor ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; font-weight: 600; }
 </style>

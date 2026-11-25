@@ -4,6 +4,7 @@
   import TabelloneAdmin from './TabelloneAdmin.svelte'
   import ChioscoAdmin from './ChioscoAdmin.svelte'
   import SerateAdmin from './SerateAdmin.svelte'
+  import SponsorAdmin from './SponsorAdmin.svelte'
   import SqualificheAdmin from './SqualificheAdmin.svelte'
   import Impostazioni from './Impostazioni.svelte'
 
@@ -13,6 +14,7 @@
     { id: 'tabellone', testo: 'Tabellone', c: TabelloneAdmin },
     { id: 'chiosco', testo: 'Chiosco', c: ChioscoAdmin },
     { id: 'serate', testo: 'Serate', c: SerateAdmin },
+    { id: 'sponsor', testo: 'Sponsor', c: SponsorAdmin },
     { id: 'squalifiche', testo: 'Squalifiche', c: SqualificheAdmin },
     { id: 'impostazioni', testo: 'Impostazioni', c: Impostazioni },
   ]

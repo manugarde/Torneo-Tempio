@@ -187,6 +187,11 @@ async function main() {
       punti: { grani: 2, curraggia: 6 },
     })
 
+    // Sponsor
+    await setDoc(doc(db, 'edizioni', '2026', 'sponsor', 'trapatainer'), {
+      nome: 'Trapatainer', logo: '', sito: '', creato: new Date('2026-01-01T00:00:00Z'),
+    })
+
     // Serate
     await setDoc(doc(db, 'edizioni', '2026', 'serate', 'serata-1'), {
       data: '2026-07-01', fase: 'Fase a gironi', menu: 'Panini con salsiccia\nPatatine', musica: 'DJ set', note: '',

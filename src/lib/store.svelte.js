@@ -4,7 +4,8 @@ import { conDefault } from './defaults.js'
 
 function converti(d) {
   const x = { id: d.id, ...d.data() }
-  if (x.dataOra?.toDate) x.dataOra = x.dataOra.toDate()
+  // Timestamp di Firestore (dataOra, creato, ...) → Date
+  for (const k in x) if (x[k]?.toDate) x[k] = x[k].toDate()
   return x
 }
 
