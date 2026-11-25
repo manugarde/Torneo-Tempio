@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ordinaPerData, TURNI } from './util.js'
+import { ordinaPerData, TURNI, ultimaNotizia, prossimaSerata } from './util.js'
 
 describe('ordinaPerData', () => {
   it('senza data: ordine per turno e slot, senza turno in fondo', () => {
@@ -11,4 +11,20 @@ describe('ordinaPerData', () => {
     expect(ordinaPerData(p).map((x) => x.id)).toEqual(['b', 'a'])
   })
   it('TURNI', () => expect(TURNI).toEqual(['Ottavi', 'Quarti', 'Semifinale', '3° posto', 'Finale']))
+})
+
+describe('home', () => {
+  it('ultimaNotizia', () => {
+    const n = [{ id: 'a', data: new Date('2027-06-01') }, { id: 'b', data: new Date('2027-06-03') }, { id: 'c', data: new Date('2027-06-02') }]
+    expect(ultimaNotizia(n).id).toBe('b')
+    expect(ultimaNotizia([])).toBeNull()
+  })
+  it('prossimaSerata: oggi incluso, passate escluse', () => {
+    const s = [{ id: 'x', data: '2027-06-20' }, { id: 'y', data: '2027-06-10' }, { id: 'z', data: '2027-06-15' }]
+    expect(prossimaSerata(s, '2027-06-15').id).toBe('z')
+    expect(prossimaSerata(s, '2027-06-11').id).toBe('z')
+    expect(prossimaSerata(s, '2027-06-01').id).toBe('y')
+    expect(prossimaSerata(s, '2027-06-21')).toBeNull()
+    expect(prossimaSerata([], '2027-06-01')).toBeNull()
+  })
 })

@@ -99,4 +99,11 @@ describe('api', () => {
     await api.deleteSponsor('2027', id)
     expect(await leggi(`edizioni/2027/sponsor/${id}`)).toBeUndefined()
   })
+  it('saveNotizia crea e aggiorna, deleteNotizia cancella', async () => {
+    const id = await api.saveNotizia('2027', { titolo: 'Ciao', testo: 'Si parte', data: new Date() })
+    await api.saveNotizia('2027', { id, titolo: 'Ciao a tutti' })
+    expect(await leggi(`edizioni/2027/notizie/${id}`)).toMatchObject({ titolo: 'Ciao a tutti', testo: 'Si parte' })
+    await api.deleteNotizia('2027', id)
+    expect(await leggi(`edizioni/2027/notizie/${id}`)).toBeUndefined()
+  })
 })
