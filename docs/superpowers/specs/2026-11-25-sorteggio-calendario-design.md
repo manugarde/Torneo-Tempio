@@ -59,6 +59,10 @@ Scartati: calcoli dentro i componenti (non testabili); Cloud Function (piano a p
 - **Squadre:** riquadro "Sorteggio gironi" con il numero di gironi (default 4, minimo 1, massimo il numero di squadre) e il pulsante "Sorteggia". È disabilitato con un messaggio se esistono partite di girone. Chiede conferma ("Riassegnare il girone di tutte le N squadre?").
 - **Calendario:** riquadro "Genera partite dei gironi" con i campi delle regole e un'anteprima ("24 partite su 6 serate, dal … al …"). Il pulsante "Genera" rispetta la regola sulle partite già presenti.
 - **Partite e Calendario:** `ordinaPerData` ordina le partite senza data per turno e poi per `slot`.
+- **Schede Gironi | Fase finale (richiesta dell'utente):**
+  - **Partite (pubblica):** due schede. Gironi mostra la lista per giorno di oggi, solo con le partite `fase: 'girone'`. Fase finale mostra le partite `fase: 'eliminazione'` raggruppate per turno, nell'ordine Ottavi → Quarti → Semifinale → 3° posto → Finale. All'apertura è attiva Fase finale se esistono partite a eliminazione e tutte quelle di girone sono `finita`, altrimenti Gironi. Le partite live restano in cima, sopra le schede. Senza partite a eliminazione la scheda Fase finale non compare.
+  - **Gestione → Calendario:** stesse due schede. Gironi contiene il riquadro "Genera partite" e la lista. Fase finale contiene la lista delle partite del tabellone, da cui modificare data e ora.
+- **Modifiche a mano senza vincoli:** la regola "nessuna squadra due volte la stessa sera" vale solo per `programma`. Il form di Calendario non aggiunge nessun controllo del genere.
 
 ## Test
 
