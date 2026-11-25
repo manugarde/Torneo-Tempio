@@ -27,7 +27,7 @@
   {#if staff}
     <form class="sezione" onsubmit={crea}>
       <p>Non c'è ancora nessuna edizione. Creala per iniziare a inserire squadre e partite.</p>
-      <label class="campo-form">Anno <input inputmode="numeric" pattern="[0-9]{4}" required bind:value={anno} /></label>
+      <label class="campo-form">Anno <input inputmode="numeric" pattern={'[0-9]{4}'} required bind:value={anno} /></label>
       <button class="btn primario">Crea edizione {anno}</button>
       {#if errore}<p class="errore" role="alert">{errore}</p>{/if}
     </form>

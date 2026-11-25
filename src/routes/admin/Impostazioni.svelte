@@ -113,7 +113,7 @@
     {/each}
   </ul>
   <div class="form-riga">
-    <label class="campo-form">Nuova edizione <input inputmode="numeric" pattern="[0-9]{4}" required bind:value={nuovoAnno} /></label>
+    <label class="campo-form">Nuova edizione <input inputmode="numeric" pattern={'[0-9]{4}'} required bind:value={nuovoAnno} /></label>
     <label class="campo-form">Copia squadre e rose da
       <select bind:value={copiaDa}>
         <option value="">Nessuna (parti vuoto)</option>
