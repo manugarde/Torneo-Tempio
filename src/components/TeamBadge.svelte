@@ -39,7 +39,7 @@
     border: 1px solid var(--linea);
   }
   .lg .iniziali { font-size: 1.3rem; }
-  .nome { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+  .nome { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; padding-right: 0.15em; }
   .lg .nome { font-family: var(--font-titolo); font-weight: 800; font-size: 1.6rem; white-space: normal; }
   .vincente { font-weight: 700; }
   .indefinita { color: var(--ardesia-2); font-style: italic; }

@@ -73,7 +73,7 @@
   .turno { display: flex; flex-direction: column; gap: 10px; scroll-snap-align: start; }
   .turno > ul { flex: 1; }
   .col-finale { flex: 1; display: grid; grid-template-rows: 1fr auto 1fr; }
-  .terzo { display: grid; gap: 8px; align-content: start; padding-top: 24px; }
+  .terzo { display: grid; gap: 8px; align-content: start; padding-top: 48px; }
   h3 { font-size: 1rem; color: var(--ardesia-2); }
   /* Su schermi larghi il tabellone esce dai 640px della pagina (fino a 1120px) per non scorrere di lato. */
   @media (min-width: 720px) {
