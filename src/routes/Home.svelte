@@ -3,12 +3,14 @@
   import { href } from '../lib/router.svelte.js'
   import { testoPeriodo, formatDataOra, formatGiorno, formatOra, dataGiorno, chiaveGiorno } from '../lib/format.js'
   import { ultimaNotizia, prossimaSerata } from '../lib/util.js'
+  import { anteprimaNotizia } from '../lib/format.js'
   import SponsorStrip from '../components/SponsorStrip.svelte'
 
   const ed = getContext('ed')
   const imp = $derived(ed.impostazioni)
   const logo = $derived(imp.logo || `${import.meta.env.BASE_URL}logo.webp`)
   const notizia = $derived(ultimaNotizia(ed.notizie))
+  const anteprima = $derived(notizia?.html ? anteprimaNotizia(notizia.html) : { immagine: '', testo: notizia?.testo ?? '' })
   const evento = $derived(prossimaSerata(ed.serate, chiaveGiorno(new Date())))
   // Partite in calendario la sera del prossimo evento.
   const partiteSera = $derived(evento ? ed.partite.filter((p) => p.dataOra && chiaveGiorno(p.dataOra) === evento.data).sort((a, b) => a.dataOra - b.dataOra) : [])
@@ -37,8 +39,9 @@
     {#if notizia}
       <article class="riquadro">
         <p class="etichetta small">Ultima notizia · {formatDataOra(notizia.data)}</p>
+        {#if anteprima.immagine}<img class="copertina" src={anteprima.immagine} alt="" />{/if}
         <h2>{notizia.titolo}</h2>
-        <p class="testo">{notizia.testo}</p>
+        <p class="testo">{anteprima.testo}</p>
         <a class="small" href={href('/notizie')}>Tutte le notizie</a>
       </article>
     {/if}
@@ -92,6 +95,7 @@
   .riquadro a { font-weight: 600; color: var(--campo); }
   .etichetta { font-weight: 600; text-transform: uppercase; color: var(--ardesia-2); }
   .testo { white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .copertina { width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--r-s); }
   .giorno::first-letter { text-transform: uppercase; }
   .fase { font-weight: 600; color: var(--campo); }
   dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }

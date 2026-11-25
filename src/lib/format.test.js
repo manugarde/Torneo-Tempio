@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDataOra, formatOra, formatGiorno, chiaveGiorno, testoPeriodo, righe, dataGiorno, normalizzaSito } from './format.js'
+import { formatDataOra, formatOra, formatGiorno, chiaveGiorno, testoPeriodo, righe, dataGiorno, normalizzaSito, anteprimaNotizia } from './format.js'
 
 // 18:30 UTC di luglio = 20:30 a Roma (ora legale)
 const d = new Date('2026-07-01T18:30:00Z')
@@ -39,4 +39,13 @@ describe('helper home', () => {
     expect(normalizzaSito('javascript:alert(1)')).toBe('')
     expect(normalizzaSito('non un sito')).toBe('')
   })
+})
+
+describe('anteprimaNotizia', () => {
+  it('prima immagine e testo senza tag', () => {
+    const a = anteprimaNotizia('<h2>Ciao</h2><p>Si <strong>parte</strong> &amp; si vince</p><p><img src="data:image/webp;base64,AAA"></p><img src="x">')
+    expect(a.immagine).toBe('data:image/webp;base64,AAA')
+    expect(a.testo).toBe('Ciao Si parte & si vince')
+  })
+  it('vuoto', () => expect(anteprimaNotizia('')).toEqual({ immagine: '', testo: '' }))
 })

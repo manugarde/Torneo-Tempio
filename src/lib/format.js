@@ -62,3 +62,16 @@ export function normalizzaSito(testo) {
     return ''
   }
 }
+
+/** Anteprima di una notizia HTML: src della prima immagine e testo senza tag. */
+export function anteprimaNotizia(html) {
+  const s = html ?? ''
+  const immagine = s.match(/<img[^>]*\ssrc="([^"]+)"/i)?.[1] ?? ''
+  const testo = s
+    .replace(/<\/(p|h[1-6]|li|div)>|<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+  return { immagine, testo }
+}

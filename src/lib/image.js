@@ -1,4 +1,4 @@
-export async function resizeLogo(file, lato = 200) {
+export async function resizeLogo(file, lato = 200, limite = 140000) {
   // Il limite 140000 coincide con le regole di firestore.
   let bitmap;
   try {
@@ -21,7 +21,7 @@ export async function resizeLogo(file, lato = 200) {
   const qualities = [0.8, 0.6, 0.4];
   for (const quality of qualities) {
     const url = canvas.toDataURL('image/webp', quality);
-    if (url.length <= 140000) {
+    if (url.length <= limite) {
       return url;
     }
   }
