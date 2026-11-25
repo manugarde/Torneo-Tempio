@@ -9,16 +9,11 @@
   const ed = getContext('ed')
   const squadre = $derived(perId(ed.squadre))
 
-  // Colonne nell'ordine dei turni; il 3° posto va sotto la finale, non in una colonna sua.
-  const turni = $derived.by(() => {
-    const finali = ed.partite.filter((x) => x.fase === 'eliminazione')
-    const delTurno = (t) => finali.filter((p) => p.turno === t).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0))
-    const colonne = TURNI.filter((t) => t !== '3° posto').map((nome) => ({ nome, partite: delTurno(nome), extra: null }))
-    const terzo = delTurno('3° posto')
-    const finale = colonne.find((c) => c.nome === 'Finale')
-    if (terzo.length && finale) finale.extra = { nome: '3° posto', partite: terzo }
-    return colonne.filter((c) => c.partite.length)
-  })
+  // Colonne nell'ordine dei turni; il 3° posto sta fuori dal tabellone, in una sezione sotto.
+  const finali = $derived(ed.partite.filter((x) => x.fase === 'eliminazione'))
+  const delTurno = (t) => finali.filter((p) => p.turno === t).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0))
+  const turni = $derived(TURNI.filter((t) => t !== '3° posto').map((nome) => ({ nome, partite: delTurno(nome) })).filter((c) => c.partite.length))
+  const terzo = $derived(delTurno('3° posto'))
 </script>
 
 <h1>Tabellone</h1>
@@ -31,13 +26,15 @@
       <section class="turno" aria-label={t.nome}>
         <h2>{t.nome}</h2>
         {@render incontri(t.partite)}
-        {#if t.extra}
-          <h2 class="extra">{t.extra.nome}</h2>
-          {@render incontri(t.extra.partite)}
-        {/if}
       </section>
     {/each}
   </div>
+  {#if terzo.length}
+    <section class="terzo" aria-label="Finale 3° posto">
+      <h2>Finale 3° posto</h2>
+      {@render incontri(terzo)}
+    </section>
+  {/if}
 {/if}
 
 {#snippet incontri(partite)}
@@ -69,10 +66,11 @@
   }
   .turno { display: flex; flex-direction: column; gap: 10px; scroll-snap-align: start; }
   .turno > ul { flex: 1; }
-  .extra { margin-top: 12px; }
+  .terzo { display: grid; gap: 10px; max-width: 320px; }
   /* Su schermi larghi il tabellone esce dai 640px della pagina (fino a 1120px) per non scorrere di lato. */
   @media (min-width: 720px) {
     .tabellone { margin-inline: calc(50% - min(50vw - 24px, 560px)); padding-inline: 0; grid-auto-columns: minmax(200px, 1fr); }
+    .terzo { margin-inline-start: calc(50% - min(50vw - 24px, 560px)); }
   }
   h2 { font-size: 1.2rem; }
   ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: space-around; gap: 12px; }
