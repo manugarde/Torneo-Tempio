@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Staff = utente con documento staff/{uid}, creato a mano dalla console.
+    // Non basta essere loggati: con email/password chiunque può creare un account via API.
+    function isStaff() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/staff/$(request.auth.uid));
+    }
+
+    match /meta/{d} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+
+    match /edizioni/{anno} {
+      allow read: if true;
+      allow write: if isStaff();
+
+      match /{raccolta}/{id} {
+        allow read: if true;
+        // Loghi base64: max 140000 caratteri (~100 KB).
+        allow write: if isStaff()
+          && (raccolta != 'squadre'
+              || request.resource == null
+              || request.resource.data.get('logo', '').size() <= 140000);
+      }
+    }
+
+    match /staff/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+  }
+}
