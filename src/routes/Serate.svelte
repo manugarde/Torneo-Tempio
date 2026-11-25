@@ -23,7 +23,7 @@
       {#if s.fase}<p class="fase">{s.fase}</p>{/if}
       <dl>
         {#if s.menu}<dt>Si mangia</dt><dd>{s.menu}</dd>{/if}
-        {#if s.musica}<dt>Musica</dt><dd>{s.musica}</dd>{/if}
+        {#if s.musica}<dt>Evento</dt><dd>{s.musica}</dd>{/if}
         {#if s.note}<dt>Note</dt><dd>{s.note}</dd>{/if}
       </dl>
     </article>

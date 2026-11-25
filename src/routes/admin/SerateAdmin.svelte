@@ -40,7 +40,7 @@
     <label class="campo-form">Fase <input bind:value={bozza.fase} placeholder="Fase a gironi" /></label>
   </div>
   <label class="campo-form">Si mangia <textarea rows="3" bind:value={bozza.menu}></textarea></label>
-  <label class="campo-form">Musica <input bind:value={bozza.musica} placeholder="DJ, band…" /></label>
+  <label class="campo-form">Evento <input bind:value={bozza.musica} placeholder="DJ, band, karaoke…" /></label>
   <label class="campo-form">Note <textarea rows="2" bind:value={bozza.note}></textarea></label>
   {#if errore}<p class="errore" role="alert">{errore}</p>{/if}
   <div class="azioni">
