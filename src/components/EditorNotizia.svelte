@@ -48,7 +48,7 @@
 
 <style>
   .editor { background: var(--superficie); border-radius: var(--r-s); }
-  .editor :global(.ql-container) { font: inherit; min-height: 220px; }
+  .editor :global(.ql-container) { font: inherit; min-height: 220px; height: auto; } /* Quill mette height:100% e sborderebbe sotto la barra */
   .editor :global(.ql-editor img) { max-width: 100%; border-radius: var(--r-s); }
   .editor :global(.ql-toolbar) { border-radius: var(--r-s) var(--r-s) 0 0; }
   .editor :global(.ql-container) { border-radius: 0 0 var(--r-s) var(--r-s); }

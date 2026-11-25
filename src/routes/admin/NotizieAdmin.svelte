@@ -53,7 +53,7 @@
     {#key versione}
       <EditorNotizia html={bozza.html} onchange={(h) => (bozza.html = h)} onerrore={(m) => (errore = m)} />
     {/key}
-    <span class="small muted">Puoi inserire 3–4 foto: vengono ridotte in automatico.</span>
+    <span class="small muted nota">Puoi inserire 3–4 foto: vengono ridotte in automatico.</span>
   </div>
   <label class="campo-form">Pubblicata il <input type="datetime-local" required bind:value={bozza.quando} />
     <span class="small muted">In home compare la notizia con la data più recente.</span></label>
@@ -85,4 +85,5 @@
 
 <style>
   .voce { display: grid; min-width: 0; }
+  .nota { margin-bottom: 12px; } /* stacca la nota sotto l'editor dal campo "Pubblicata il" */
 </style>
