@@ -91,6 +91,14 @@ export async function deleteSponsor(anno, id) {
   await deleteDoc(doc(db, 'edizioni', anno, 'sponsor', id))
 }
 
+export async function saveNotizia(anno, notizia) {
+  return salva(anno, 'notizie', notizia)
+}
+
+export async function deleteNotizia(anno, id) {
+  await deleteDoc(doc(db, 'edizioni', anno, 'notizie', id))
+}
+
 export async function saveImpostazioni(anno, imp) {
   const editionDoc = doc(db, 'edizioni', anno)
   await setDoc(editionDoc, imp, { merge: true })

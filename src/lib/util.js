@@ -38,3 +38,13 @@ export function perInputData(date) {
 }
 
 export const TURNI = ['Ottavi', 'Quarti', 'Semifinale', '3° posto', 'Finale']
+
+/** Notizia con la data più recente, o null. */
+export function ultimaNotizia(notizie) {
+  return notizie.reduce((acc, n) => (!acc || (n.data?.getTime() ?? 0) > (acc.data?.getTime() ?? 0) ? n : acc), null)
+}
+
+/** Prima serata da oggi in poi (data 'YYYY-MM-DD' >= oggi), o null. */
+export function prossimaSerata(serate, oggi) {
+  return serate.filter((s) => s.data >= oggi).reduce((acc, s) => (!acc || s.data < acc.data ? s : acc), null)
+}
