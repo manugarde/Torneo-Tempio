@@ -1,9 +1,19 @@
 export const perId = (arr) => new Map(arr.map((x) => [x.id, x]))
 
-/** Partite in ordine cronologico; senza data in fondo. */
+/** Partite in ordine cronologico; senza data: per turno (TURNI) e slot. */
 export function ordinaPerData(partite) {
-  return [...partite].sort((a, b) =>
-    (a.dataOra?.getTime() ?? Infinity) - (b.dataOra?.getTime() ?? Infinity) || String(a.id).localeCompare(String(b.id)))
+  return [...partite].sort((a, b) => {
+    const dateA = a.dataOra?.getTime() ?? Infinity;
+    const dateB = b.dataOra?.getTime() ?? Infinity;
+    if (dateA !== dateB) return dateA - dateB;
+    const indexA = TURNI.includes(a.turno) ? TURNI.indexOf(a.turno) : Infinity;
+    const indexB = TURNI.includes(b.turno) ? TURNI.indexOf(b.turno) : Infinity;
+    if (indexA !== indexB) return indexA - indexB;
+    const slotA = a.slot ?? Infinity;
+    const slotB = b.slot ?? Infinity;
+    if (slotA !== slotB) return slotA - slotB;
+    return String(a.id).localeCompare(String(b.id));
+  });
 }
 
 /** Prossima partita non finita della squadra, o null. */
@@ -26,3 +36,5 @@ export function perInputData(date) {
   const p = (n) => String(n).padStart(2, '0')
   return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}T${p(date.getHours())}:${p(date.getMinutes())}`
 }
+
+export const TURNI = ['Ottavi', 'Quarti', 'Semifinale', '3° posto', 'Finale']
