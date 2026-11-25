@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDataOra, formatOra, formatGiorno, chiaveGiorno, testoPeriodo, righe, dataGiorno, avvisoVisibile } from './format.js'
+import { formatDataOra, formatOra, formatGiorno, chiaveGiorno, testoPeriodo, righe, dataGiorno, avvisoVisibile, normalizzaSito } from './format.js'
 
 // 18:30 UTC di luglio = 20:30 a Roma (ora legale)
 const d = new Date('2026-07-01T18:30:00Z')
@@ -31,6 +31,13 @@ describe('helper home', () => {
   it('dataGiorno resta nel giorno giusto a Roma', () => {
     expect(formatGiorno(dataGiorno('2027-06-12'))).toBe('sabato 12 giugno')
     expect(chiaveGiorno(dataGiorno('2027-06-12'))).toBe('2027-06-12')
+  })
+  it('normalizzaSito', () => {
+    expect(normalizzaSito('')).toBe('')
+    expect(normalizzaSito('  www.x.it ')).toBe('https://www.x.it/')
+    expect(normalizzaSito('http://a.b/c')).toBe('http://a.b/c')
+    expect(normalizzaSito('javascript:alert(1)')).toBe('')
+    expect(normalizzaSito('non un sito')).toBe('')
   })
   it('avvisoVisibile', () => {
     expect(avvisoVisibile('Pioggia', false)).toBe(true)

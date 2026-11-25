@@ -8,7 +8,7 @@ describe('conDefault', () => {
     expect(i.luogo).toBe('Campetto sintetico, via Campagne 1, Tempio di Ormelle')
     expect(i.orari).toBe('Apertura dalle 19.00')
     expect(i.avviso).toBe('')
-    expect(i.sponsor).toEqual(['Powered by Trapatainer'])
+    expect(i.sponsor).toBeUndefined()
     expect(i.logo).toBe('')
   })
   it('rispetta i valori salvati', () => {

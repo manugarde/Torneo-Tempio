@@ -44,7 +44,7 @@ Raccolta `edizioni/{anno}/sponsor`, con lo stesso schema delle serate (store, ap
 - **`defaults.js`:** il campo `sponsor` viene rimosso (con il suo test). In Impostazioni si toglie la textarea Sponsor.
 - **`src/components/SponsorStrip.svelte`:** prop `sponsor`, ordinati per `creato`.
   - Ogni voce è un `<a href={sito} target="_blank" rel="noopener noreferrer">` se c'è il sito, altrimenti uno `<span>`.
-  - Dentro, il logo (`<img alt={nome}>`, alto 56px e largo al massimo 140px, `object-fit: contain`) oppure il nome scritto.
+  - Dentro, il logo (`<img alt={nome}>`, alto 56px e largo al massimo 140px; su telefono, sotto i 720px, 40px e 100px; `object-fit: contain`) oppure il nome scritto.
   - Oltre 4 sponsor la lista viene duplicata. La copia ha `aria-hidden="true"` e i suoi link hanno `tabindex="-1"`. Animazione CSS `translateX(0 → -50%)` lineare infinita, durata `4s × numero di sponsor`, in pausa su `:hover` e `:focus-within` e mentre un dito tocca la striscia.
   - Con `prefers-reduced-motion: reduce`: niente animazione, niente copia, `overflow-x: auto`.
 - **`Home.svelte`:** il footer Sponsor usa `SponsorStrip` con `ed.sponsor`. Se non ci sono sponsor il footer non compare.

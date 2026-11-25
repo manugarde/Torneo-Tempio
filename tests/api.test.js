@@ -92,4 +92,11 @@ describe('api', () => {
     const tutte = (await getDocs(collection(stato.db, 'edizioni/2027/partite'))).docs.map((d) => d.data().casaId).sort()
     expect(tutte).toEqual(['P', 'Q'])
   })
+  it('saveSponsor crea e aggiorna, deleteSponsor cancella', async () => {
+    const id = await api.saveSponsor('2027', { nome: 'Bar', logo: '', sito: '', creato: new Date() })
+    await api.saveSponsor('2027', { id, sito: 'https://bar.it/' })
+    expect(await leggi(`edizioni/2027/sponsor/${id}`)).toMatchObject({ nome: 'Bar', sito: 'https://bar.it/' })
+    await api.deleteSponsor('2027', id)
+    expect(await leggi(`edizioni/2027/sponsor/${id}`)).toBeUndefined()
+  })
 })
