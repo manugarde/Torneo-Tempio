@@ -53,3 +53,17 @@ export function dataGiorno(chiave) {
 export function avvisoVisibile(avviso, storica) {
   return !storica && !!avviso?.trim()
 }
+
+/** Sito di uno sponsor: aggiunge https:// se manca; accetta solo http/https, altrimenti ''. */
+export function normalizzaSito(testo) {
+  let t = (testo ?? '').trim()
+  if (!t) return ''
+  if (!t.includes('://')) t = 'https://' + t
+  try {
+    const url = new URL(t)
+    if (!['http:', 'https:'].includes(url.protocol) || !url.hostname.includes('.')) return ''
+    return url.href
+  } catch {
+    return ''
+  }
+}

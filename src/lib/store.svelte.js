@@ -20,7 +20,7 @@ export function useMeta() {
   return s
 }
 
-const RACCOLTE = ['squadre', 'partite', 'squalificheManuali', 'chiosco', 'serate']
+const RACCOLTE = ['squadre', 'partite', 'squalificheManuali', 'chiosco', 'serate', 'sponsor']
 
 /**
  * Dati di un'edizione. Ogni raccolta apre il suo listener al primo accesso
@@ -30,7 +30,7 @@ export class Edizione {
   anno
   #avviate = new Set()
   #stop = []
-  #dati = $state({ impostazioni: null, squadre: [], partite: [], squalificheManuali: [], chiosco: [], serate: [] })
+  #dati = $state({ impostazioni: null, squadre: [], partite: [], squalificheManuali: [], chiosco: [], serate: [], sponsor: [] })
   #pronte = $state({})
   #inAttesa = $state({})
 
@@ -57,6 +57,7 @@ export class Edizione {
   get squalificheManuali() { this.#avvia('squalificheManuali'); return this.#dati.squalificheManuali }
   get chiosco() { this.#avvia('chiosco'); return this.#dati.chiosco }
   get serate() { this.#avvia('serate'); return this.#dati.serate }
+  get sponsor() { this.#avvia('sponsor'); return this.#dati.sponsor }
 
   /** true quando la raccolta ha ricevuto il primo snapshot. */
   pronta(chiave) { this.#avvia(chiave); return !!this.#pronte[chiave] }
