@@ -9,7 +9,7 @@
   const ed = getContext('ed')
   const squadre = $derived(perId(ed.squadre))
 
-  // Colonne nell'ordine dei turni; il 3° posto sta fuori dal tabellone, in una sezione sotto.
+  // Colonne nell'ordine dei turni; il 3° posto va sotto la finale, nella stessa colonna.
   const finali = $derived(ed.partite.filter((x) => x.fase === 'eliminazione'))
   const delTurno = (t) => finali.filter((p) => p.turno === t).sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0))
   const turni = $derived(TURNI.filter((t) => t !== '3° posto').map((nome) => ({ nome, partite: delTurno(nome) })).filter((c) => c.partite.length))
@@ -25,16 +25,22 @@
     {#each turni as t (t.nome)}
       <section class="turno" aria-label={t.nome}>
         <h2>{t.nome}</h2>
-        {@render incontri(t.partite)}
+        {#if t.nome === 'Finale' && terzo.length}
+          <!-- righe 1fr / auto / 1fr: la finale resta a metà altezza, il 3° posto sotto -->
+          <div class="col-finale">
+            <span></span>
+            {@render incontri(t.partite)}
+            <div class="terzo">
+              <h3>Finale 3° posto</h3>
+              {@render incontri(terzo)}
+            </div>
+          </div>
+        {:else}
+          {@render incontri(t.partite)}
+        {/if}
       </section>
     {/each}
   </div>
-  {#if terzo.length}
-    <section class="terzo" aria-label="Finale 3° posto">
-      <h2>Finale 3° posto</h2>
-      {@render incontri(terzo)}
-    </section>
-  {/if}
 {/if}
 
 {#snippet incontri(partite)}
@@ -66,11 +72,12 @@
   }
   .turno { display: flex; flex-direction: column; gap: 10px; scroll-snap-align: start; }
   .turno > ul { flex: 1; }
-  .terzo { display: grid; gap: 10px; max-width: 320px; }
+  .col-finale { flex: 1; display: grid; grid-template-rows: 1fr auto 1fr; }
+  .terzo { display: grid; gap: 8px; align-content: start; padding-top: 24px; }
+  h3 { font-size: 1rem; color: var(--ardesia-2); }
   /* Su schermi larghi il tabellone esce dai 640px della pagina (fino a 1120px) per non scorrere di lato. */
   @media (min-width: 720px) {
     .tabellone { margin-inline: calc(50% - min(50vw - 24px, 560px)); padding-inline: 0; grid-auto-columns: minmax(200px, 1fr); }
-    .terzo { margin-inline-start: calc(50% - min(50vw - 24px, 560px)); }
   }
   h2 { font-size: 1.2rem; }
   ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: space-around; gap: 12px; }
