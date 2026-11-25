@@ -5,9 +5,10 @@ import {
 } from 'firebase/firestore'
 import { firebaseConfig } from '../firebase-config.js'
 
-const emulatore = import.meta.env.VITE_EMULATOR === '1' || firebaseConfig.projectId.startsWith('demo-')
+// `npm run dev:emu`: dati finti sugli emulatori locali, mai sul progetto vero.
+const emulatore = import.meta.env.VITE_EMULATOR === '1'
 
-export const app = initializeApp(firebaseConfig)
+export const app = initializeApp(emulatore ? { ...firebaseConfig, projectId: 'demo-torneo' } : firebaseConfig)
 export const auth = getAuth(app)
 // Cache offline: al campo con poco segnale le scritture dello staff vanno in coda.
 export const db = initializeFirestore(app, {

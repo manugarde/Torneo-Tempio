@@ -57,7 +57,7 @@ async function main() {
     // Teams
     const teamNames = [
       { id: 'grani', nome: 'Granitici' },
-      { id: 'lupi', nome: 'Lupi Gallresi' },
+      { id: 'lupi', nome: 'Lupi Galluresi' },
       { id: 'sughero', nome: 'Sughero FC' },
       { id: 'limbara', nome: 'Limbara' },
       { id: 'curraggia', nome: 'Curraggia' },
@@ -156,7 +156,7 @@ async function main() {
             prossima: null,
           }
 
-          await setDoc(doc(db, 'edizioni', '2026', 'match', `g${k}`), matchData)
+          await setDoc(doc(db, 'edizioni', '2026', 'partite', `g${k}`), matchData)
           k++
         }
       }
@@ -169,7 +169,7 @@ async function main() {
       { id: 'f', turno: 'Finale', slot: 1, fase: 'eliminazione', casaId: null, ospiteId: null, stato: 'programmata', dataOra: new Date(Date.UTC(2026, 6, 6, 19, 0)), prossima: null },
     ]
     for (const match of knockoutMatches) {
-      await setDoc(doc(db, 'edizioni', '2026', 'match', match.id), {
+      await setDoc(doc(db, 'edizioni', '2026', 'partite', match.id), {
         ...match,
         eventi: [],
         rigori: null,
