@@ -1,4 +1,4 @@
-export async function resizeLogo(file) {
+export async function resizeLogo(file, lato = 200) {
   // Il limite 140000 coincide con le regole di firestore.
   let bitmap;
   try {
@@ -7,7 +7,7 @@ export async function resizeLogo(file) {
     throw new Error('Immagine non leggibile.');
   }
 
-  const scale = Math.min(1, 200 / Math.max(bitmap.width, bitmap.height));
+  const scale = Math.min(1, lato / Math.max(bitmap.width, bitmap.height));
   const w = Math.round(bitmap.width * scale);
   const h = Math.round(bitmap.height * scale);
 
