@@ -8,7 +8,6 @@ export const IMPOSTAZIONI_DEFAULT = {
   periodo: 'Giugno',
   luogo: 'Campetto sintetico, via Campagne 1, Tempio di Ormelle',
   orari: 'Apertura dalle 19.00',
-  avviso: '',
   logo: '',
 }
 

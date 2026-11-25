@@ -1,14 +1,15 @@
 <script>
   import { getContext } from 'svelte'
   import { href } from '../lib/router.svelte.js'
-  import { testoPeriodo, avvisoVisibile } from '../lib/format.js'
+  import { testoPeriodo, formatDataOra, formatGiorno, dataGiorno, chiaveGiorno } from '../lib/format.js'
+  import { ultimaNotizia, prossimaSerata } from '../lib/util.js'
   import SponsorStrip from '../components/SponsorStrip.svelte'
 
-  /** @type {{ storica?: boolean }} */
-  let { storica = false } = $props()
   const ed = getContext('ed')
   const imp = $derived(ed.impostazioni)
   const logo = $derived(imp.logo || `${import.meta.env.BASE_URL}logo.webp`)
+  const notizia = $derived(ultimaNotizia(ed.notizie))
+  const evento = $derived(prossimaSerata(ed.serate, chiaveGiorno(new Date())))
 
   const menu = [
     // mobile: false → su telefono la voce c'è già nella barra in basso
@@ -17,6 +18,7 @@
     { percorso: '/giocatori', testo: 'Classifica marcatori', mobile: false },
     { percorso: '/chiosco', testo: 'Coppa Chiosco', mobile: false },
     { percorso: '/tabellone', testo: 'Tabellone fase finale', mobile: false },
+    { percorso: '/notizie', testo: 'Notizie', mobile: true },
     { percorso: '/serate', testo: 'Eventi giornalieri', mobile: true },
   ]
 </script>
@@ -28,8 +30,26 @@
   {#if imp.orari?.trim()}<p class="orari">{imp.orari}</p>{/if}
 </section>
 
-{#if avvisoVisibile(imp.avviso, storica)}
-  <p class="avviso" role="status">{imp.avviso}</p>
+{#if notizia || evento}
+  <div class="riquadri">
+    {#if notizia}
+      <article class="riquadro">
+        <p class="etichetta small">Ultima notizia · {formatDataOra(notizia.data)}</p>
+        <h2>{notizia.titolo}</h2>
+        <p class="testo">{notizia.testo}</p>
+        <a class="small" href={href('/notizie')}>Tutte le notizie</a>
+      </article>
+    {/if}
+    {#if evento}
+      <article class="riquadro">
+        <p class="etichetta small">Prossimo evento</p>
+        <h2 class="giorno">{formatGiorno(dataGiorno(evento.data))}</h2>
+        {#if evento.fase}<p class="fase">{evento.fase}</p>{/if}
+        {#if evento.musica}<p>{evento.musica}</p>{/if}
+        <a class="small" href={href('/serate')}>Tutti gli eventi</a>
+      </article>
+    {/if}
+  </div>
 {/if}
 
 <nav aria-label="Menu del torneo">
@@ -59,10 +79,14 @@
   .luogo { font-weight: 600; }
   .orari { color: var(--ardesia-2); }
 
-  .avviso {
-    padding: 12px 16px; border-radius: var(--r-m);
-    background: var(--giallo); color: #1e282c; font-weight: 600; white-space: pre-line;
-  }
+  .riquadri { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .riquadro { display: grid; gap: 6px; align-content: start; padding: 16px; background: var(--superficie); border-radius: var(--r-m); border-left: 4px solid var(--campo); }
+  .riquadro h2 { font-size: 1.35rem; }
+  .riquadro a { font-weight: 600; color: var(--campo); }
+  .etichetta { font-weight: 600; text-transform: uppercase; color: var(--ardesia-2); }
+  .testo { white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .giorno::first-letter { text-transform: uppercase; }
+  .fase { font-weight: 600; color: var(--campo); }
 
   nav a {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -73,7 +97,7 @@
 
   @media (max-width: 719px) {
     .solo-desktop { display: none; }
-    .lista > li:not(.solo-desktop) { border-top: 0; } /* resta solo Eventi: niente riga sopra */
+    .lista > li.solo-desktop + li:not(.solo-desktop) { border-top: 0; } /* prima voce visibile: niente riga sopra */
   }
   .sponsor { display: grid; gap: 10px; justify-items: center; min-width: 0; padding-top: 12px; border-top: 1px solid var(--linea); text-align: center; }
   .sponsor h2 { font-family: var(--font-testo); font-weight: 600; text-transform: uppercase; color: var(--ardesia-2); }

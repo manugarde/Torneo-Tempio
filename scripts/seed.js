@@ -187,6 +187,14 @@ async function main() {
       punti: { grani: 2, curraggia: 6 },
     })
 
+    // Notizie
+    await setDoc(doc(db, 'edizioni', '2026', 'notizie', 'n1'), {
+      titolo: 'Iscrizioni chiuse', testo: 'Sedici squadre al via. Il calendario è online.', data: new Date('2026-06-20T18:00:00Z'),
+    })
+    await setDoc(doc(db, 'edizioni', '2026', 'notizie', 'n2'), {
+      titolo: 'Stasera si parte alle 20', testo: "Per la pioggia la prima partita slitta di mezz'ora.\nIl chiosco apre comunque alle 19.", data: new Date('2026-07-01T15:00:00Z'),
+    })
+
     // Sponsor
     await setDoc(doc(db, 'edizioni', '2026', 'sponsor', 'trapatainer'), {
       nome: 'Trapatainer', logo: '', sito: '', creato: new Date('2026-01-01T00:00:00Z'),

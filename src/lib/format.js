@@ -49,11 +49,6 @@ export function dataGiorno(chiave) {
   return new Date(chiave + 'T12:00:00Z')
 }
 
-/** Determina se avviso è visibile. */
-export function avvisoVisibile(avviso, storica) {
-  return !storica && !!avviso?.trim()
-}
-
 /** Sito di uno sponsor: aggiunge https:// se manca; accetta solo http/https, altrimenti ''. */
 export function normalizzaSito(testo) {
   let t = (testo ?? '').trim()

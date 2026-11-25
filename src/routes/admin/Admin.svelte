@@ -5,11 +5,13 @@
   import ChioscoAdmin from './ChioscoAdmin.svelte'
   import SerateAdmin from './SerateAdmin.svelte'
   import SponsorAdmin from './SponsorAdmin.svelte'
+  import NotizieAdmin from './NotizieAdmin.svelte'
   import SqualificheAdmin from './SqualificheAdmin.svelte'
   import Impostazioni from './Impostazioni.svelte'
 
   const sezioni = [
     { id: 'squadre', testo: 'Squadre', c: Squadre },
+    { id: 'notizie', testo: 'Notizie', c: NotizieAdmin },
     { id: 'calendario', testo: 'Calendario', c: Calendario },
     { id: 'tabellone', testo: 'Tabellone', c: TabelloneAdmin },
     { id: 'chiosco', testo: 'Chiosco', c: ChioscoAdmin },

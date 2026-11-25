@@ -78,8 +78,6 @@
       <span class="small muted">Senza anno, es. "Giugno" o "12–28 giugno": l'anno lo aggiunge il sito.</span></label>
     <label class="campo-form">Luogo <input bind:value={imp.luogo} /></label>
     <label class="campo-form">Orari <input bind:value={imp.orari} placeholder="Apertura dalle 19.00" /></label>
-    <label class="campo-form">Avviso <textarea rows="2" bind:value={imp.avviso}></textarea>
-      <span class="small muted">Compare in evidenza in home. Lascia vuoto per non mostrare nulla.</span></label>
   </fieldset>
 
   <fieldset class="form-riga">

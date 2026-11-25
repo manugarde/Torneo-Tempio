@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDataOra, formatOra, formatGiorno, chiaveGiorno, testoPeriodo, righe, dataGiorno, avvisoVisibile, normalizzaSito } from './format.js'
+import { formatDataOra, formatOra, formatGiorno, chiaveGiorno, testoPeriodo, righe, dataGiorno, normalizzaSito } from './format.js'
 
 // 18:30 UTC di luglio = 20:30 a Roma (ora legale)
 const d = new Date('2026-07-01T18:30:00Z')
@@ -38,10 +38,5 @@ describe('helper home', () => {
     expect(normalizzaSito('http://a.b/c')).toBe('http://a.b/c')
     expect(normalizzaSito('javascript:alert(1)')).toBe('')
     expect(normalizzaSito('non un sito')).toBe('')
-  })
-  it('avvisoVisibile', () => {
-    expect(avvisoVisibile('Pioggia', false)).toBe(true)
-    expect(avvisoVisibile('Pioggia', true)).toBe(false)
-    expect(avvisoVisibile('  ', false)).toBe(false)
   })
 })
