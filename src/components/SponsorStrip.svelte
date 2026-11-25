@@ -45,7 +45,11 @@
   ul { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 28px; }
   .fermi { flex-wrap: wrap; justify-content: center; }
   li { flex: none; }
-  a, .voce { display: flex; align-items: center; justify-content: center; min-height: 44px; text-decoration: none; }
+  /* Piastrina chiara anche nel tema scuro: i loghi sono pensati per lo sfondo bianco. */
+  a, .voce {
+    display: flex; align-items: center; justify-content: center; min-height: 44px; text-decoration: none;
+    padding: 6px 12px; border-radius: var(--r-s); background: #f6f7f5; color: #1e282c;
+  }
   img { height: 56px; width: auto; max-width: 140px; object-fit: contain; }
   .nome { font-weight: 600; white-space: nowrap; }
 
