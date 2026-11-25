@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest'
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, getDocs, collection } from 'firebase/firestore'
 
 let env
 const stato = vi.hoisted(() => ({ db: null }))
@@ -79,5 +79,17 @@ describe('api', () => {
     expect(await leggi(`edizioni/2027/serate/${id}`)).toMatchObject({ data: '2027-06-12', musica: 'DJ Rossi' })
     await api.deleteSerata('2027', id)
     expect(await leggi(`edizioni/2027/serate/${id}`)).toBeUndefined()
+  })
+  it('assegnaGironi aggiorna solo il girone', async () => {
+    const id = await api.saveSquadra('2027', { nome: 'X', girone: 'A', giocatori: [] })
+    await api.assegnaGironi('2027', { [id]: 'C' })
+    expect(await leggi(`edizioni/2027/squadre/${id}`)).toMatchObject({ nome: 'X', girone: 'C' })
+  })
+  it('sostituisciPartiteGirone elimina e crea in un colpo', async () => {
+    const vecchia = await api.savePartita('2027', { ...base, fase: 'girone' })
+    await api.sostituisciPartiteGirone('2027', [vecchia], [{ ...base, fase: 'girone', casaId: 'P' }, { ...base, fase: 'girone', casaId: 'Q' }])
+    expect(await leggi(`edizioni/2027/partite/${vecchia}`)).toBeUndefined()
+    const tutte = (await getDocs(collection(stato.db, 'edizioni/2027/partite'))).docs.map((d) => d.data().casaId).sort()
+    expect(tutte).toEqual(['P', 'Q'])
   })
 })
