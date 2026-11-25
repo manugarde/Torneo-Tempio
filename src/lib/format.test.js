@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatDataOra, formatOra, formatGiorno, chiaveGiorno } from './format.js'
+import { formatDataOra, formatOra, formatGiorno, chiaveGiorno, testoPeriodo, righe, dataGiorno, avvisoVisibile } from './format.js'
 
 // 18:30 UTC di luglio = 20:30 a Roma (ora legale)
 const d = new Date('2026-07-01T18:30:00Z')
@@ -14,5 +14,27 @@ describe('format (Europe/Rome)', () => {
   it('date mancanti', () => {
     expect(formatDataOra(null)).toBe('Da definire')
     expect(chiaveGiorno(null)).toBe('')
+  })
+})
+
+describe('helper home', () => {
+  it('testoPeriodo', () => {
+    expect(testoPeriodo('Giugno', '2027')).toBe('Giugno 2027')
+    expect(testoPeriodo(' 12–28 giugno ', '2027')).toBe('12–28 giugno 2027')
+    expect(testoPeriodo('', '2027')).toBe('2027')
+    expect(testoPeriodo('  ', '2027')).toBe('2027')
+  })
+  it('righe', () => {
+    expect(righe(' A \n\n B\r\n  \n')).toEqual(['A', 'B'])
+    expect(righe('')).toEqual([])
+  })
+  it('dataGiorno resta nel giorno giusto a Roma', () => {
+    expect(formatGiorno(dataGiorno('2027-06-12'))).toBe('sabato 12 giugno')
+    expect(chiaveGiorno(dataGiorno('2027-06-12'))).toBe('2027-06-12')
+  })
+  it('avvisoVisibile', () => {
+    expect(avvisoVisibile('Pioggia', false)).toBe(true)
+    expect(avvisoVisibile('Pioggia', true)).toBe(false)
+    expect(avvisoVisibile('  ', false)).toBe(false)
   })
 })

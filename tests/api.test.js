@@ -73,4 +73,11 @@ describe('api', () => {
     await api.saveChiosco('2026', '2026-07-01', { alfa: 5, beta: 2 })
     expect(await leggi('edizioni/2026/chiosco/2026-07-01')).toEqual({ giorno: '2026-07-01', punti: { alfa: 5, beta: 2 } })
   })
+  it('saveSerata crea e aggiorna, deleteSerata cancella', async () => {
+    const id = await api.saveSerata('2027', { data: '2027-06-12', fase: 'Fase a gironi', menu: 'Panini', musica: '', note: '' })
+    await api.saveSerata('2027', { id, musica: 'DJ Rossi' })
+    expect(await leggi(`edizioni/2027/serate/${id}`)).toMatchObject({ data: '2027-06-12', musica: 'DJ Rossi' })
+    await api.deleteSerata('2027', id)
+    expect(await leggi(`edizioni/2027/serate/${id}`)).toBeUndefined()
+  })
 })
