@@ -63,6 +63,7 @@
 <style>
   .gironi { display: grid; gap: 28px; }
   .gironi.affiancati { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .affiancati .sezione { align-content: start; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .tabella-wrap { background: var(--superficie); border-radius: var(--r-m); overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
@@ -72,6 +73,9 @@
   tbody tr + tr td { border-top: 1px solid var(--linea); }
   .pos { width: 34px; padding-left: 12px; text-align: left; color: var(--ardesia-2); }
   .sq { text-align: left; max-width: 150px; }
+  /* nomi lunghi: vanno a capo invece di finire sopra le colonne dei numeri */
+  .sq :global(.badge) { display: flex; }
+  .sq :global(.nome) { white-space: normal; overflow-wrap: anywhere; }
   .pt { font-weight: 700; padding-right: 12px; }
   tr.passa .pos { box-shadow: inset 4px 0 0 var(--campo); color: var(--campo); font-weight: 700; }
   .legenda { display: inline-block; width: 4px; height: 12px; background: var(--campo); vertical-align: -1px; margin-right: 4px; }
