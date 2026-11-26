@@ -78,6 +78,10 @@
       <span class="small muted">Senza anno, es. "Giugno" o "12–28 giugno": l'anno lo aggiunge il sito.</span></label>
     <label class="campo-form">Luogo <input bind:value={imp.luogo} /></label>
     <label class="campo-form">Orari <input bind:value={imp.orari} placeholder="Apertura dalle 19.00" /></label>
+    <label class="campo-form">Avviso <textarea rows="2" bind:value={imp.avviso}></textarea>
+      <span class="small muted">Compare in giallo in cima alla home (es. allerta meteo). Lascia vuoto per non mostrare nulla.</span></label>
+    <label class="campo-form">Instagram <input type="url" bind:value={imp.instagram} placeholder="https://www.instagram.com/…" />
+      <span class="small muted">Link del bottone "Seguici!" in home. Vuoto = nascosto.</span></label>
   </fieldset>
 
   <fieldset class="form-riga">

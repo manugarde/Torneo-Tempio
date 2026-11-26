@@ -35,9 +35,9 @@
   const Corrente = $derived(route.nome === 'admin' && authState.isStaff ? Admin : viste[route.nome] ?? Home)
 </script>
 
-<Header {storica} />
+<Header {storica} largo={Corrente === Home} />
 <main class="pagina">
-  <Corrente param={route.param} />
+  <Corrente param={route.param} {storica} />
   {#if edizioni.length > 1}
     <nav class="edizioni small" aria-label="Edizioni">
       <span class="muted">Edizioni:</span>

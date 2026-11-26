@@ -4,13 +4,13 @@
   import { href } from '../lib/router.svelte.js'
   import LoginDialog from './LoginDialog.svelte'
 
-  /** @type {{ storica: boolean }} */
-  let { storica } = $props()
+  /** @type {{ storica: boolean, largo?: boolean }} largo: in home su PC la pagina è larga 1120px */
+  let { storica, largo = false } = $props()
   const ed = getContext('ed')
   let login = $state(false)
 </script>
 
-<header>
+<header class:largo>
   <span></span>
   <a class="titolo" href={href('/')}>
     <span class="nome">{ed.impostazioni.nome}</span>
@@ -49,5 +49,6 @@
   .chiave { border-color: transparent; background: transparent; color: var(--ardesia-2); }
   .chiave svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
   .attesa { color: var(--rosso); font-weight: 600; }
+  @media (min-width: 1000px) { header.largo { max-width: 1120px; } }
   .storica { max-width: 640px; margin: 8px auto 0; padding: 8px 16px; background: var(--giallo); color: #1e282c; }
 </style>

@@ -16,8 +16,8 @@
 {:else}
   {#each notizie as n (n.id)}
     <article class="notizia">
-      <p class="small muted">{formatDataOra(n.data)}</p>
       <h2>{n.titolo}</h2>
+      <p class="small muted">{formatDataOra(n.data)}</p>
       {#if n.html}<div class="contenuto">{@html pulisciHtml(n.html)}</div>{:else}<p class="testo">{n.testo}</p>{/if}
     </article>
   {/each}

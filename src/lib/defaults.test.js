@@ -9,6 +9,8 @@ describe('conDefault', () => {
     expect(i.orari).toBe('Apertura dalle 19.00')
     expect(i.sponsor).toBeUndefined()
     expect(i.logo).toBe('')
+    expect(i.avviso).toBe('')
+    expect(i.instagram).toBe('https://www.instagram.com/campetto_tempio/')
   })
   it('rispetta i valori salvati', () => {
     expect(conDefault({ periodo: '12–28 giugno', sponsor: [] })).toMatchObject({ periodo: '12–28 giugno', sponsor: [] })

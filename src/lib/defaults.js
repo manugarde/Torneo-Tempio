@@ -9,6 +9,8 @@ export const IMPOSTAZIONI_DEFAULT = {
   luogo: 'Campetto sintetico, via Campagne 1, Tempio di Ormelle',
   orari: 'Apertura dalle 19.00',
   logo: '',
+  avviso: '', // striscia gialla in home (es. allerta meteo), vuoto = nascosta
+  instagram: 'https://www.instagram.com/campetto_tempio/',
 }
 
 /** Impostazioni salvate + default per i campi mancanti. */

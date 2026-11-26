@@ -58,6 +58,9 @@
     }
   }
 
+  // Cambio rapido di data e ora dall'elenco, senza aprire la modifica.
+  const cambiaData = (p, valore) => savePartita(ed.anno, { id: p.id, dataOra: valore ? new Date(valore) : null }).catch((e) => { errore = e.message })
+
   let bozza = $state(null)
   let errore = $state('')
 
@@ -162,6 +165,7 @@
       {#each elenco as p (p.id)}
         <li class="voce-admin">
           <div class="riga-partita"><MatchRow partita={p} {squadre} mostraData={formatDataOra(p.dataOra)} /></div>
+          <input class="data" type="datetime-local" aria-label="Data e ora" value={perInputData(p.dataOra)} onchange={(e) => cambiaData(p, e.currentTarget.value)} />
           <button class="btn" onclick={() => modifica(p)}>Modifica</button>
         </li>
       {/each}
@@ -179,6 +183,8 @@
   .giorni { display: flex; flex-wrap: wrap; gap: 4px 14px; border: 1px solid var(--linea); border-radius: var(--r-s); }
   .check { display: flex; align-items: center; gap: 6px; min-height: 44px; }
   .check input { width: 20px; height: 20px; }
-  .riga-partita { flex: 1; pointer-events: none; }
+  .data { min-height: 40px; padding: 4px 6px; border: 1px solid var(--linea); border-radius: var(--r-s); background: var(--superficie); max-width: 190px; }
+  .voce-admin { flex-wrap: wrap; }
+  .riga-partita { flex: 1 1 220px; pointer-events: none; }
   .riga-partita :global(.riga) { padding: 0; grid-template-columns: 92px 1fr; }
 </style>

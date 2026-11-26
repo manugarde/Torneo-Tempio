@@ -63,15 +63,20 @@ export function normalizzaSito(testo) {
   }
 }
 
-/** Anteprima di una notizia HTML: src della prima immagine e testo senza tag. */
-export function anteprimaNotizia(html) {
-  const s = html ?? ''
-  const immagine = s.match(/<img[^>]*\ssrc="([^"]+)"/i)?.[1] ?? ''
-  const testo = s
+/** Testo di un pezzo di HTML, senza tag ed entità. */
+function soloTesto(html) {
+  return html
     .replace(/<\/(p|h[1-6]|li|div)>|<br\s*\/?>/gi, ' ')
     .replace(/<[^>]+>/g, '')
     .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
     .replace(/\s+/g, ' ')
     .trim()
-  return { immagine, testo }
+}
+
+/** Anteprima di una notizia HTML: src della prima immagine, testo senza tag e se la foto viene prima del testo. */
+export function anteprimaNotizia(html) {
+  const s = html ?? ''
+  const immagine = s.match(/<img[^>]*\ssrc="([^"]+)"/i)?.[1] ?? ''
+  const fotoSopra = !!immagine && !soloTesto(s.slice(0, s.search(/<img/i)))
+  return { immagine, testo: soloTesto(s), fotoSopra }
 }

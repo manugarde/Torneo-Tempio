@@ -4,6 +4,8 @@
   import { computeStandings } from '../lib/calc/standings.js'
   import { perId } from '../lib/util.js'
 
+  /** @type {{ incorporata?: boolean }} incorporata: dentro la home su PC, senza titolo e con i gironi affiancati */
+  let { incorporata = false } = $props()
   const ed = getContext('ed')
   const squadre = $derived(perId(ed.squadre))
   const classifiche = $derived(computeStandings(ed.squadre, ed.partite, ed.impostazioni))
@@ -11,13 +13,14 @@
   const pariMerito = $derived(Object.values(classifiche).flat().some((r) => r.pariMerito && r.g > 0))
 </script>
 
-<h1>Gironi</h1>
+{#if !incorporata}<h1>Gironi</h1>{/if}
 
 {#if !ed.pronta('squadre')}
   <p class="muted" role="status">Caricamento…</p>
 {:else if !Object.keys(classifiche).length}
   <p class="vuoto">Le squadre non sono ancora state inserite.</p>
 {:else}
+  <div class="gironi" class:affiancati={incorporata}>
   {#each Object.entries(classifiche) as [girone, righe] (girone)}
     <section class="sezione">
       <h2>Girone {girone}</h2>
@@ -50,6 +53,7 @@
       </div>
     </section>
   {/each}
+  </div>
   <p class="small muted">
     <span class="legenda"></span> Accedono alla fase finale.
     {#if pariMerito}* Pari merito: l'ordine è deciso dallo staff.{/if}
@@ -57,6 +61,8 @@
 {/if}
 
 <style>
+  .gironi { display: grid; gap: 28px; }
+  .gironi.affiancati { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .tabella-wrap { background: var(--superficie); border-radius: var(--r-m); overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }

@@ -195,6 +195,15 @@ async function main() {
       titolo: 'Stasera si parte alle 20', testo: "Per la pioggia la prima partita slitta di mezz'ora.\nIl chiosco apre comunque alle 19.", data: new Date('2026-07-01T15:00:00Z'),
     })
 
+    // Notizie con foto (logo come immagine di prova): una sopra al testo, una sotto.
+    const foto = `data:image/webp;base64,${readFileSync(new URL('../public/logo.webp', import.meta.url)).toString('base64')}`
+    await setDoc(doc(db, 'edizioni', '2026', 'notizie', 'n3'), {
+      titolo: 'Ecco la mascotte', html: `<p><img src="${foto}"></p><p>Il procione del Tempio accompagnerà tutte le serate del torneo.</p>`, data: new Date('2026-07-02T10:00:00Z'),
+    })
+    await setDoc(doc(db, 'edizioni', '2026', 'notizie', 'n4'), {
+      titolo: 'Premiazioni', html: `<p>Alla finale premiamo capocannoniere, miglior portiere e squadra più corretta.</p><p><img src="${foto}"></p>`, data: new Date('2026-07-02T12:00:00Z'),
+    })
+
     // Sponsor
     await setDoc(doc(db, 'edizioni', '2026', 'sponsor', 'trapatainer'), {
       nome: 'Trapatainer', logo: '', sito: '', creato: new Date('2026-01-01T00:00:00Z'),

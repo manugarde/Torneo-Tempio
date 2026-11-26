@@ -3,9 +3,14 @@
   import { savePartita, deletePartita, nuovoId } from '../../lib/api.js'
   import { computeStandings } from '../../lib/calc/standings.js'
   import { proposePairings } from '../../lib/calc/bracket.js'
+  import { perId, perInputData, TURNI } from '../../lib/util.js'
 
   const ed = getContext('ed')
   const finali = $derived(ed.partite.filter((p) => p.fase === 'eliminazione'))
+  const squadre = $derived(perId(ed.squadre))
+  // Tutte le partite della fase finale, nell'ordine dei turni, per date e orari.
+  const perTurno = $derived([...finali].sort((a, b) => TURNI.indexOf(a.turno) - TURNI.indexOf(b.turno) || a.slot - b.slot))
+  const nomeSquadra = (id) => squadre.get(id)?.nome ?? 'Da definire'
   const NOMI = { 16: 'Ottavi', 8: 'Quarti', 4: 'Semifinale', 2: 'Finale' }
 
   let squadreTabellone = $state(4)
@@ -50,6 +55,7 @@
     messaggio = 'Accoppiamenti proposti dalle classifiche. Puoi correggerli qui sotto.'
   }
 
+  const cambiaData = (p, valore) => savePartita(ed.anno, { id: p.id, dataOra: valore ? new Date(valore) : null }).catch((e) => { errore = e.message })
   const assegna = (p, campo, valore) => savePartita(ed.anno, { id: p.id, [campo]: valore || null }).catch((e) => { errore = e.message })
 
   async function eliminaTutto() {
@@ -87,6 +93,14 @@
       </div>
     {/each}
     <p class="small muted">I turni successivi si riempiono da soli quando una partita viene chiusa. La finale 3° posto va assegnata qui o dal Calendario.</p>
+  </div>
+  <div class="form">
+    <h2>Date e orari</h2>
+    {#each perTurno as p (p.id)}
+      <label class="campo-form">{p.turno}{p.turno === 'Finale' || p.turno === '3° posto' ? '' : ` ${p.slot}`} · {nomeSquadra(p.casaId)} – {nomeSquadra(p.ospiteId)}
+        <input type="datetime-local" value={perInputData(p.dataOra)} onchange={(e) => cambiaData(p, e.currentTarget.value)} />
+      </label>
+    {/each}
   </div>
   <button class="btn pericolo" onclick={eliminaTutto}>Elimina tabellone</button>
 {/if}
