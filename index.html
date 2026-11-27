@@ -3,11 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#2c7a4b" />
+    <meta name="theme-color" content="#276e43" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Big+Shoulders+Display:wght@700;800&display=swap" rel="stylesheet" />
+    <!-- Font caricati senza bloccare il primo disegno della pagina. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Big+Shoulders+Display:wght@700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Big+Shoulders+Display:wght@700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Big+Shoulders+Display:wght@700;800&display=swap" /></noscript>
     <title>Torneo Tempio – Torneo di calcio a 5 a Tempio di Ormelle</title>
     <meta name="description" content="Torneo di calcio a 5 di Tempio di Ormelle: calendario, risultati in diretta, classifiche dei gironi, marcatori, tabellone, notizie ed eventi delle serate." />
     <meta name="google-site-verification" content="d_esKWlTla4Y2bGzpJj3cia8-881ZXXIBMGmOW3uZcI" />
@@ -18,6 +21,11 @@
     <meta property="og:url" content="https://manugarde.github.io/Torneo-Tempio/" />
   </head>
   <body>
+    <!-- Schermata d'avvio: il logo compare subito, App.svelte la toglie quando i dati sono pronti. -->
+    <div id="avvio" role="status" style="position:fixed;inset:0;z-index:30;display:grid;place-content:center;justify-items:center;gap:12px;background:#e6e8e5;color:#56625f;font-family:system-ui,sans-serif">
+      <img src="./logo.webp" alt="Torneo Tempio" width="240" height="240" fetchpriority="high" style="height:240px;width:auto" />
+      Caricamento…
+    </div>
     <div id="app"></div>
     <noscript>Torneo Tempio: torneo di calcio a 5 a Tempio di Ormelle. Attiva JavaScript per vedere calendario, risultati e classifiche.</noscript>
     <script type="module" src="/src/main.js"></script>

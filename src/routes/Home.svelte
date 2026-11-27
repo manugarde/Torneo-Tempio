@@ -44,7 +44,7 @@
   {/if}
 
   <section class="evento largo">
-    <img class="logo" src={logo} alt={imp.nome} width="240" height="240" />
+    <img class="logo" src={logo} alt={imp.nome} width="240" height="240" fetchpriority="high" />
     <div class="info">
       <h1 class="num">{testoPeriodo(imp.periodo, ed.anno)}</h1>
       {#if imp.luogo?.trim()}<p class="luogo">{imp.luogo}</p>{/if}

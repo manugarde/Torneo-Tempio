@@ -16,7 +16,6 @@
   import Chiosco from './routes/Chiosco.svelte'
   import Squadra from './routes/Squadra.svelte'
   import Partita from './routes/Partita.svelte'
-  import Admin from './routes/admin/Admin.svelte'
 
   /** @type {{ anno: string, storica: boolean, edizioni: string[] }} */
   let { anno, storica, edizioni } = $props()
@@ -32,12 +31,27 @@
   setContext('calc', { get sospensioni() { return sospensioni } })
 
   const viste = { '': Home, partite: Partite, serate: Serate, notizie: Notizie, gironi: Gironi, giocatori: Giocatori, tabellone: Tabellone, chiosco: Chiosco, squadra: Squadra, partita: Partita }
-  const Corrente = $derived(route.nome === 'admin' && authState.isStaff ? Admin : viste[route.nome] ?? Home)
+  // Si disegna solo con le impostazioni arrivate (avviso, date, luogo): niente salti di layout.
+  const pronta = $derived(ed.pronta('impostazioni'))
+  $effect(() => { if (pronta) document.getElementById('avvio')?.remove() })
+
+  const inAdmin = $derived(route.nome === 'admin' && authState.isStaff)
+  const Corrente = $derived(inAdmin ? null : viste[route.nome] ?? Home)
 </script>
 
+{#if pronta}
 <Header {storica} largo={Corrente === Home} />
 <main class="pagina">
-  <Corrente param={route.param} {storica} />
+  {#if inAdmin}
+    <!-- Gestione caricata solo per lo staff: il pubblico non scarica quel codice. -->
+    {#await import('./routes/admin/Admin.svelte')}
+      <p class="muted" role="status">Caricamento…</p>
+    {:then { default: Admin }}
+      <Admin param={route.param} {storica} />
+    {/await}
+  {:else}
+    <Corrente param={route.param} {storica} />
+  {/if}
   {#if edizioni.length > 1}
     <nav class="edizioni small" aria-label="Edizioni">
       <span class="muted">Edizioni:</span>
@@ -49,6 +63,7 @@
 </main>
 <!-- In home la barra serve solo su telefono: su PC ci sono i bottoni del menu. -->
 <div class:solo-mobile={Corrente === Home}><Nav /></div>
+{/if}
 
 <style>
   @media (min-width: 720px) { .solo-mobile { display: none; } }

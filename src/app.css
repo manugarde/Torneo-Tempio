@@ -4,7 +4,7 @@
   --linea: #c8ccc7;
   --ardesia: #1e282c;
   --ardesia-2: #56625f;
-  --campo: #2c7a4b;
+  --campo: #276e43;
   --campo-chiaro: #d7eadd;
   --giallo: #f2c230;
   --rosso: #c8322b;
@@ -92,7 +92,7 @@ button, input, select { font: inherit; color: inherit; }
 .tag.rischio { background: var(--giallo); color: #1e282c; }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  *:not(.nastro) { animation: none !important; transition: none !important; }
 }
 
 /* Gestione (staff) */

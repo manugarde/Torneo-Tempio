@@ -12,11 +12,11 @@
     <li>
       {#if s.sito}
         <a href={s.sito} target="_blank" rel="noopener noreferrer" tabindex={copia ? -1 : undefined} title={s.nome}>
-          {#if s.logo}<img src={s.logo} alt={s.nome} />{:else}<span class="nome">{s.nome}</span>{/if}
+          {#if s.logo}<img src={s.logo} alt={s.nome} width="140" height="56" />{:else}<span class="nome">{s.nome}</span>{/if}
         </a>
       {:else}
         <span class="voce" title={s.nome}>
-          {#if s.logo}<img src={s.logo} alt={s.nome} />{:else}<span class="nome">{s.nome}</span>{/if}
+          {#if s.logo}<img src={s.logo} alt={s.nome} width="140" height="56" />{:else}<span class="nome">{s.nome}</span>{/if}
         </span>
       {/if}
     </li>
@@ -61,10 +61,10 @@
   .striscia:hover .nastro, .striscia:has(:focus-visible) .nastro, .striscia.fermo .nastro { animation-play-state: paused; }
   @keyframes scorri { to { transform: translateX(-50%); } }
 
+  /* Con le animazioni ridotte (es. Windows con "effetti animazione" spenti) gli sponsor
+     devono comunque girare: solo più lenti. Si fermano al passaggio del mouse o al tocco. */
   @media (prefers-reduced-motion: reduce) {
-    .striscia { overflow-x: auto; mask-image: none; }
-    .nastro { animation: none; }
-    .copia { display: none; }
+    .nastro { animation-duration: calc(var(--durata) * 2); }
   }
   @media (max-width: 719px) {
     ul { gap: 20px; }

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, connectAuthEmulator } from 'firebase/auth'
+import { initializeAuth, indexedDBLocalPersistence, browserLocalPersistence, connectAuthEmulator } from 'firebase/auth'
 import {
   initializeFirestore, persistentLocalCache, persistentMultipleTabManager, connectFirestoreEmulator,
 } from 'firebase/firestore'
@@ -9,7 +9,8 @@ import { firebaseConfig } from '../firebase-config.js'
 const emulatore = import.meta.env.VITE_EMULATOR === '1'
 
 export const app = initializeApp(emulatore ? { ...firebaseConfig, projectId: 'demo-torneo' } : firebaseConfig)
-export const auth = getAuth(app)
+// Senza popupRedirectResolver: niente iframe auth (~95 KB) a ogni visita; usiamo solo email/password.
+export const auth = initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] })
 // Cache offline: al campo con poco segnale le scritture dello staff vanno in coda.
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),

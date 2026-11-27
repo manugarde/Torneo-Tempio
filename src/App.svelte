@@ -7,10 +7,12 @@
 
   const meta = useMeta()
   const anno = $derived(route.query.ed ?? meta.corrente)
+  // Schermata d'avvio di index.html: senza edizione la toglie qui, altrimenti Vista.svelte.
+  $effect(() => { if (meta.ready && !anno) document.getElementById('avvio')?.remove() })
 </script>
 
 {#if !meta.ready}
-  <p class="pagina muted" role="status">Caricamento…</p>
+  <!-- in attesa: si vede la schermata d'avvio di index.html -->
 {:else if !anno}
   <Benvenuto staff={authState.isStaff} />
 {:else}
