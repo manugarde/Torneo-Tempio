@@ -23,7 +23,7 @@
   <body>
     <!-- Schermata d'avvio: il logo compare subito, App.svelte la toglie quando i dati sono pronti. -->
     <div id="avvio" role="status" style="position:fixed;inset:0;z-index:30;display:grid;place-content:center;justify-items:center;gap:12px;background:#e6e8e5;color:#56625f;font-family:system-ui,sans-serif">
-      <img src="./logo.webp" alt="Torneo Tempio" width="240" height="240" fetchpriority="high" style="height:240px;width:auto" />
+      <img src="./logo.webp" alt="Torneo Tempio" width="240" height="240" fetchpriority="high" style="width:min(280px,75vw);height:auto" />
       Caricamento…
     </div>
     <div id="app"></div>
