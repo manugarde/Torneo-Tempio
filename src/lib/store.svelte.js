@@ -2,11 +2,13 @@ import { collection, doc, onSnapshot } from 'firebase/firestore'
 import { db } from './firebase.js'
 import { conDefault } from './defaults.js'
 import { route } from './router.svelte.js'
-import { authState } from './auth.svelte.js'
 import { simulaGironi } from './calc/simula.js'
 
-/** ?simula=1: risultati finti dei gironi, solo in memoria. Mai per lo staff, che potrebbe salvarli. */
-export const simulazione = () => route.query.simula === '1' && !authState.isStaff
+/**
+ * ?simula=1: risultati finti dei gironi, solo in memoria. Mai in Gestione, che scrive su Firestore
+ * partendo dalle partite; fuori dalla Gestione i comandi di modifica sono nascosti (Partita.svelte).
+ */
+export const simulazione = () => route.query.simula === '1' && route.nome !== 'admin'
 
 function converti(d) {
   const x = { id: d.id, ...d.data() }

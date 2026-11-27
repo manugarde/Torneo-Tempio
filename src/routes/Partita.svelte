@@ -5,6 +5,7 @@
   import EventIcon from '../components/EventIcon.svelte'
   import TeamBadge from '../components/TeamBadge.svelte'
   import { authState } from '../lib/auth.svelte.js'
+  import { simulazione } from '../lib/store.svelte.js'
   import { href } from '../lib/router.svelte.js'
   import { removeEvento } from '../lib/api.js'
   import { perId, trovaGiocatore } from '../lib/util.js'
@@ -32,6 +33,8 @@
     errore = ''
     removeEvento(ed.anno, partita.id, e).catch((err) => { errore = err.message })
   }
+  // In simulazione niente comandi di modifica: salverebbero risultati finti.
+  const modifica = $derived(authState.isStaff && !simulazione())
 </script>
 
 {#if !ed.pronta('partite')}
@@ -45,7 +48,7 @@
     <p class="avviso small">Squalificati: {fermi.map((g) => g.nome).join(', ')}</p>
   {/if}
 
-  {#if authState.isStaff}<MatchEditor {partita} {squadre} />{/if}
+  {#if modifica}<MatchEditor {partita} {squadre} />{/if}
 
   <section class="sezione">
     <h2>Eventi</h2>
@@ -61,7 +64,7 @@
               <span class="nome">{g?.giocatore.nome ?? (e.giocatoreId ? 'Giocatore rimosso' : 'Marcatore sconosciuto')}</span>
               <span class="small muted">{nomi[e.tipo]} · <TeamBadge squadra={squadre.get(e.squadraId)} size="sm" nome={true} link={false} /></span>
             </span>
-            {#if authState.isStaff}
+            {#if modifica}
               <button class="btn pericolo piccolo" onclick={() => annulla(e)} aria-label="Annulla {nomi[e.tipo]} {g?.giocatore.nome ?? ''}">Annulla</button>
             {/if}
           </li>
