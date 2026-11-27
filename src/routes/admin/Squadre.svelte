@@ -4,6 +4,7 @@
   import { saveSquadra, deleteSquadra, nuovoId, assegnaGironi } from '../../lib/api.js'
   import { resizeLogo } from '../../lib/image.js'
   import { sorteggiaGironi } from '../../lib/calc/gironi.js'
+  import { foglioDaSquadra, foglioTemplate, squadraDaFoglio, unisciSquadra } from '../../lib/excel.js'
 
   const ed = getContext('ed')
   const ordinate = $derived([...ed.squadre].sort((a, b) => (a.girone ?? '').localeCompare(b.girone ?? '') || a.nome.localeCompare(b.nome, 'it')))
@@ -57,6 +58,62 @@
     }
   }
 
+  // Librerie Excel caricate solo al click: non pesano sul resto del sito.
+  const scrivi = () => import('write-excel-file/browser').then((m) => m.default)
+  let importazione = $state(false)
+  let esitoImport = $state('')
+  let erroreImport = $state('')
+
+  async function scaricaTemplate() {
+    erroreImport = ''
+    try { await (await scrivi())([foglioTemplate()]).toFile('modulo-squadra.xlsx') } catch (err) { erroreImport = err.message }
+  }
+
+  async function esporta() {
+    erroreImport = ''
+    const usati = new Set()
+    try { await (await scrivi())(ordinate.map((s) => foglioDaSquadra(s, usati))).toFile(`squadre-${ed.anno}.xlsx`) } catch (err) { erroreImport = err.message }
+  }
+
+  async function importa(e) {
+    const input = e.currentTarget
+    const files = [...(input.files ?? [])]
+    if (!files.length) return
+    erroreImport = ''
+    esitoImport = ''
+    importazione = true
+    const elenco = $state.snapshot(ed.squadre)
+    let nuove = 0, aggiornate = 0
+    const saltati = []
+    try {
+      const { default: leggi } = await import('read-excel-file/browser')
+      for (const file of files) {
+        let fogli
+        try {
+          // prima converte tutto il file: un errore non lascia salvataggi a metà
+          fogli = (await leggi(file)).map((f) => ({ f, sq: squadraDaFoglio(f) }))
+        } catch (err) {
+          throw new Error(`${file.name}: ${err.message}`)
+        }
+        for (const { f, sq } of fogli) {
+          if (!sq) { saltati.push(`${file.name} › ${f.sheet}`); continue }
+          const { squadra, nuova } = unisciSquadra(elenco, sq, nuovoId)
+          squadra.id = await saveSquadra(ed.anno, squadra)
+          const i = elenco.findIndex((s) => s.id === squadra.id)
+          if (i >= 0) elenco[i] = squadra; else elenco.push(squadra)
+          nuova ? nuove++ : aggiornate++
+        }
+      }
+    } catch (err) {
+      erroreImport = err.message
+    } finally {
+      importazione = false
+      input.value = ''
+      esitoImport = `${nuove + aggiornate} squadre importate (${nuove} nuove, ${aggiornate} aggiornate).`
+        + (saltati.length ? ` Fogli saltati senza nome squadra: ${saltati.join(', ')}.` : '')
+    }
+  }
+
   async function elimina() {
     const giocate = ed.partite.some((p) => p.casaId === bozza.id || p.ospiteId === bozza.id)
     if (!confirm(`Eliminare ${bozza.nome}?${giocate ? ' Ha partite in calendario: resteranno senza squadra.' : ''}`)) return
@@ -99,6 +156,20 @@
   </form>
 {:else}
   <button class="btn primario" onclick={() => modifica(nuova())}>Nuova squadra</button>
+  <div class="form">
+    <h2>Importa da Excel</h2>
+    <p class="small muted">Un foglio per squadra: nome squadra in alto, poi n° maglia e nome e cognome. Le squadre già presenti vengono aggiornate (logo e girone restano).</p>
+    <div class="excel">
+      <button type="button" class="btn" onclick={scaricaTemplate}>Scarica template</button>
+      <label class="btn" class:disabilitato={importazione}>
+        {importazione ? 'Importazione…' : 'Importa'}
+        <input type="file" accept=".xlsx" multiple hidden disabled={importazione} onchange={importa} />
+      </label>
+      {#if ordinate.length}<button type="button" class="btn" onclick={esporta}>Esporta squadre</button>{/if}
+    </div>
+    {#if esitoImport}<p role="status">{esitoImport}</p>{/if}
+    {#if erroreImport}<p class="errore" role="alert">{erroreImport}</p>{/if}
+  </div>
   {#if ordinate.length > 1}
     <form class="form" onsubmit={sorteggia}>
       <h2>Sorteggio gironi</h2>
@@ -133,6 +204,8 @@
 <style>
   .sorteggio { display: flex; align-items: end; gap: 10px; }
   .sorteggio .campo-form { flex: 1; }
+  .excel { display: flex; gap: 10px; flex-wrap: wrap; }
+  .disabilitato { opacity: .6; pointer-events: none; }
   .logo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   fieldset { display: grid; gap: 8px; border: 1px solid var(--linea); border-radius: var(--r-s); }
   .giocatore { display: grid; grid-template-columns: 64px 1fr 44px; gap: 6px; }
