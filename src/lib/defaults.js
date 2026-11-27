@@ -11,6 +11,7 @@ export const IMPOSTAZIONI_DEFAULT = {
   logo: '',
   avviso: '', // striscia gialla in home (es. allerta meteo), vuoto = nascosta
   instagram: 'https://www.instagram.com/campetto_tempio/',
+  mappa: 'https://maps.app.goo.gl/WCpRkCkvyWvxrMpa7', // bottone "Ecco dove trovarci!" in home
 }
 
 /** Impostazioni salvate + default per i campi mancanti. */

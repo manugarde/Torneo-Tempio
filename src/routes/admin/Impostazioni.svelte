@@ -82,6 +82,8 @@
       <span class="small muted">Compare in giallo in cima alla home (es. allerta meteo). Lascia vuoto per non mostrare nulla.</span></label>
     <label class="campo-form">Instagram <input type="url" bind:value={imp.instagram} placeholder="https://www.instagram.com/…" />
       <span class="small muted">Link del bottone "Seguici!" in home. Vuoto = nascosto.</span></label>
+    <label class="campo-form">Google Maps <input type="url" bind:value={imp.mappa} placeholder="https://maps.app.goo.gl/…" />
+      <span class="small muted">Link del bottone "Ecco dove trovarci!" in home. Vuoto = nascosto.</span></label>
   </fieldset>
 
   <fieldset class="form-riga">

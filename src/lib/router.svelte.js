@@ -12,7 +12,8 @@ window.addEventListener('hashchange', () => {
   window.scrollTo(0, 0)
 })
 
-/** Link che conserva ?ed= quando si guarda un'edizione passata. */
+/** Link che conserva ?ed= (edizione passata) e ?simula= (simulazione gironi). */
 export function href(percorso) {
-  return route.query.ed ? `#${percorso}?ed=${route.query.ed}` : `#${percorso}`
+  const qs = new URLSearchParams(Object.entries(route.query).filter(([k]) => k === 'ed' || k === 'simula')).toString()
+  return qs ? `#${percorso}?${qs}` : `#${percorso}`
 }

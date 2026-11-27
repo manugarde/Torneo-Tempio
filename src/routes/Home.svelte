@@ -14,6 +14,7 @@
   const imp = $derived(ed.impostazioni)
   const logo = $derived(imp.logo || `${import.meta.env.BASE_URL}logo.webp`)
   const instagram = $derived(normalizzaSito(imp.instagram))
+  const mappa = $derived(normalizzaSito(imp.mappa))
   // Su telefono si vede solo la prima (CSS), su PC le ultime 4.
   const notizie = $derived([...ed.notizie].sort((a, b) => (b.data?.getTime() ?? 0) - (a.data?.getTime() ?? 0)).slice(0, 4)
     .map((n) => ({ ...n, ...(n.html ? anteprimaNotizia(n.html) : { immagine: '', testo: n.testo ?? '', fotoSopra: false }) })))
@@ -49,11 +50,21 @@
       <h1 class="num">{testoPeriodo(imp.periodo, ed.anno)}</h1>
       {#if imp.luogo?.trim()}<p class="luogo">{imp.luogo}</p>{/if}
       {#if imp.orari?.trim()}<p class="orari">{imp.orari}</p>{/if}
-      {#if instagram}
-        <a class="instagram" href={instagram} target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.6" /></svg>
-          Seguici su Instagram!
-        </a>
+      {#if instagram || mappa}
+        <div class="bottoni">
+          {#if mappa}
+            <a class="pillola" href={mappa} target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+              Ecco dove trovarci!
+            </a>
+          {/if}
+          {#if instagram}
+            <a class="pillola" href={instagram} target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.6" /></svg>
+              Seguici su Instagram!
+            </a>
+          {/if}
+        </div>
       {/if}
     </div>
   </section>
@@ -61,7 +72,7 @@
   <div class="principale">
     {#if notizie.length}
       <section class="sezione notizie">
-        <div class="testata"><h2>Notizie recenti</h2><a class="small" href={href('/notizie')}>Tutte le notizie</a></div>
+        <div class="testata"><h2>Notizie recenti</h2><a class="pillola piccola" href={href('/notizie')}>Tutte le notizie <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></a></div>
         <ul>
           {#each notizie as n (n.id)}
             <li>
@@ -80,7 +91,7 @@
 
     {#if ed.squadre.length}
       <section class="sezione solo-pc">
-        <div class="testata"><h2>Classifica gironi</h2><a class="small" href={href('/gironi')}>Dettagli</a></div>
+        <div class="testata"><h2>Classifica gironi</h2><a class="pillola piccola" href={href('/gironi')}>Dettagli <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></a></div>
         <Gironi incorporata />
       </section>
     {/if}
@@ -98,7 +109,7 @@
           {#if evento.musica}<dt>Evento</dt><dd>{evento.musica}</dd>{/if}
           {#if evento.note}<dt>Note</dt><dd>{evento.note}</dd>{/if}
         </dl>
-        <a class="small" href={href('/serate')}>Tutti gli eventi</a>
+        <a class="pillola piccola" href={href('/serate')}>Tutti gli eventi <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></a>
       </article>
     {/if}
 
@@ -145,14 +156,18 @@
   h1 { font-size: 2.4rem; color: var(--campo); }
   .luogo { font-weight: 600; }
   .orari { color: var(--ardesia-2); }
-  .instagram {
-    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 6px; padding: 8px 16px;
+  .bottoni { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
+  /* Bottoni a pillola: link esterni (Instagram, Maps) e link alle pagine del sito. */
+  .pillola {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px;
     border-radius: 999px; background: var(--superficie); font-weight: 700; text-decoration: none; color: var(--campo);
   }
-  .instagram svg { fill: none; stroke: currentColor; stroke-width: 2; }
+  .pillola:hover { background: var(--campo-chiaro); }
+  .pillola svg { flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .pillola.piccola { gap: 4px; min-height: 36px; padding: 6px 10px 6px 14px; font-size: 0.85rem; }
+  .riquadro .pillola { justify-self: start; background: var(--granito); }
 
-  .testata { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-  .testata a, .riquadro a { font-weight: 600; color: var(--campo); }
+  .testata { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .notizie ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
   .notizie li, .notizie article { height: 100%; }
   .riquadro { display: grid; gap: 6px; align-content: start; padding: 16px; background: var(--superficie); border-radius: var(--r-m); border-left: 4px solid var(--campo); }
@@ -186,6 +201,7 @@
     .home { margin-inline: calc(50% - min(50vw - 24px, 560px)); grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
     .largo { grid-column: 1 / -1; }
     .evento { grid-template-columns: auto 1fr; justify-items: start; align-items: center; gap: 32px; text-align: left; }
+    .bottoni { justify-content: flex-start; }
     .logo { width: 200px; margin: 0; }
     h1 { font-size: 3rem; }
     nav a { font-size: 1.15rem; min-height: 48px; }

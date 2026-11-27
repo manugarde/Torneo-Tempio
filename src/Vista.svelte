@@ -1,6 +1,6 @@
 <script>
   import { setContext, onDestroy } from 'svelte'
-  import { Edizione } from './lib/store.svelte.js'
+  import { Edizione, simulazione } from './lib/store.svelte.js'
   import { route } from './lib/router.svelte.js'
   import { authState } from './lib/auth.svelte.js'
   import { computeSuspensions } from './lib/calc/suspensions.js'
@@ -43,6 +43,9 @@
 {#if pronta}
 <Header {storica} largo={Corrente === Home} />
 <main class="pagina">
+  {#if simulazione()}
+    <p class="simulazione" role="status">Simulazione: i risultati dei gironi non giocati sono inventati. <a href={'#/' + [route.nome, route.param].filter(Boolean).join('/') + (route.query.ed ? `?ed=${route.query.ed}` : '')}>Torna ai dati veri</a></p>
+  {/if}
   {#if inAdmin}
     <!-- Gestione caricata solo per lo staff: il pubblico non scarica quel codice. -->
     {#await import('./routes/admin/Admin.svelte')}
@@ -67,6 +70,8 @@
 {/if}
 
 <style>
+  .simulazione { margin: 0 0 16px; padding: 10px 16px; border-radius: var(--r-m); background: var(--ardesia); color: var(--su-tabellone); font-weight: 600; }
+  .simulazione a { color: inherit; }
   @media (min-width: 720px) { .solo-mobile { display: none; } }
   .edizioni { display: flex; flex-wrap: wrap; gap: 4px 12px; padding-top: 12px; border-top: 1px solid var(--linea); }
   .edizioni a[aria-current='page'] { font-weight: 700; text-decoration: none; }

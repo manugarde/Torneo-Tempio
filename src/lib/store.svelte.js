@@ -1,6 +1,12 @@
 import { collection, doc, onSnapshot } from 'firebase/firestore'
 import { db } from './firebase.js'
 import { conDefault } from './defaults.js'
+import { route } from './router.svelte.js'
+import { authState } from './auth.svelte.js'
+import { simulaGironi } from './calc/simula.js'
+
+/** ?simula=1: risultati finti dei gironi, solo in memoria. Mai per lo staff, che potrebbe salvarli. */
+export const simulazione = () => route.query.simula === '1' && !authState.isStaff
 
 function converti(d) {
   const x = { id: d.id, ...d.data() }
@@ -54,7 +60,10 @@ export class Edizione {
   get impostazioni() { this.#avvia('impostazioni'); return conDefault(this.#dati.impostazioni) }
   get esiste() { this.#avvia('impostazioni'); return this.#dati.impostazioni !== null }
   get squadre() { this.#avvia('squadre'); return this.#dati.squadre }
-  get partite() { this.#avvia('partite'); return this.#dati.partite }
+  get partite() {
+    this.#avvia('partite')
+    return simulazione() ? simulaGironi(this.#dati.partite, this.squadre) : this.#dati.partite
+  }
   get squalificheManuali() { this.#avvia('squalificheManuali'); return this.#dati.squalificheManuali }
   get chiosco() { this.#avvia('chiosco'); return this.#dati.chiosco }
   get serate() { this.#avvia('serate'); return this.#dati.serate }
