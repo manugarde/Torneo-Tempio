@@ -31,12 +31,13 @@
   setContext('calc', { get sospensioni() { return sospensioni } })
 
   const viste = { '': Home, partite: Partite, serate: Serate, notizie: Notizie, gironi: Gironi, giocatori: Giocatori, tabellone: Tabellone, chiosco: Chiosco, squadra: Squadra, partita: Partita }
-  // Si disegna solo con le impostazioni arrivate (avviso, date, luogo): niente salti di layout.
-  const pronta = $derived(ed.pronta('impostazioni'))
-  $effect(() => { if (pronta) document.getElementById('avvio')?.remove() })
-
   const inAdmin = $derived(route.nome === 'admin' && authState.isStaff)
   const Corrente = $derived(inAdmin ? null : viste[route.nome] ?? Home)
+
+  // Si disegna solo con i dati arrivati (impostazioni e, in home, notizie e partite): niente salti di layout.
+  const DATI_HOME = ['notizie', 'partite', 'squadre', 'serate']
+  const pronta = $derived(ed.pronta('impostazioni') && (Corrente !== Home || DATI_HOME.every((k) => ed.pronta(k))))
+  $effect(() => { if (pronta) document.getElementById('avvio')?.remove() })
 </script>
 
 {#if pronta}

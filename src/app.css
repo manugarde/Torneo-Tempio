@@ -33,6 +33,8 @@
 /* Solo tema chiaro (bianco sporco): scelta degli organizzatori, niente tema scuro automatico. */
 
 * { box-sizing: border-box; }
+/* Spazio della barra di scorrimento sempre riservato: la pagina non si sposta quando compare. */
+html { scrollbar-gutter: stable; }
 body { margin: 0; min-height: 100dvh; background: var(--granito); }
 h1, h2, h3 { font-family: var(--font-titolo); font-weight: 800; line-height: 1.05; margin: 0; text-wrap: balance; }
 h1 { font-size: 2rem; }
