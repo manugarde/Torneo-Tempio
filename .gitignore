@@ -27,3 +27,6 @@ firestore-debug.log
 ui-debug.log
 .firebase
 .aider*
+
+# graphify (locale)
+graphify-out/
